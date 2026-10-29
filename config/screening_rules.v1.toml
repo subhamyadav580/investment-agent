@@ -1,0 +1,81 @@
+# Screening rules v1. These are STARTING parameters to validate, not definitions of a good investment.
+# Bump `version` on every change: it is stored with every screening run and research report so results are
+# reproducible.
+
+version = "2026.10.2"
+
+[universe]
+include_series = ["EQ", "BE", "BZ", "BL"]        # NSE main-board series
+include_bse_groups = ["A", "B", "T", "X", "XT", "P"]  # BSE main-board groups (Z/ZP = non-compliant, excluded)
+exclude_sme = true
+allowed_instruments = ["EQUITY"]
+
+[eligibility]
+min_years = 3                  # hard minimum of usable annual history
+preferred_years = 5            # less than this -> warning, and growth uses what exists
+max_financials_age_days = 456  # latest FY older than ~15 months -> stale
+max_price_age_days = 10
+conflict_tolerance = 0.02      # >2% disagreement between sources for same period/metric -> flagged
+
+[quality]
+min_revenue_cagr = 0.0
+min_profit_positive_ratio = 0.8   # share of years with positive net profit
+min_roce = 0.15                   # non-financials
+min_roe_financial = 0.12          # banks / NBFCs use ROE instead of ROCE
+max_debt_to_equity = 1.0
+min_interest_coverage = 3.0
+critical_interest_coverage = 1.5  # hard fail below this
+min_cfo_to_pat = 0.7
+max_gross_npa_pct = 5.0           # financials only, when reported
+
+[liquidity]
+min_avg_traded_value_cr = 1.0     # 60-session average daily traded value, INR crore
+
+[valuation]
+max_pe_vs_sector_median = 1.5     # flag above this multiple of sector median P/E
+max_pe_absolute = 80.0
+max_pb_financial = 4.0
+
+[governance]
+serious_flags = ["auditor_resignation", "auditor_qualification", "sebi_order", "insolvency"]
+warning_flags = ["regulatory_action", "credit_rating_downgrade"]
+pledge_warning_pct = 20.0         # % of promoter holding pledged
+pledge_serious_pct = 50.0
+promoter_drop_warning_pp = 5.0    # promoter holding fall over the last year, percentage points
+lookback_days = 365
+
+[scoring.weights]
+business_quality = 0.30
+growth_consistency = 0.20
+financial_health = 0.20
+valuation = 0.20
+governance_data_quality = 0.10
+
+[research]
+enqueue_top_n = 30
+min_score_for_research = 50.0
+worth_deeper_research_score = 65.0
+
+[alerts]
+# Alert thresholds are screening rules, not trade instructions. Watchlist entries can override per company
+# via `alert_overrides` using the same keys.
+margin_drop_pp = 0.03             # operating margin fall vs previous period (0.03 = 3 percentage points)
+profit_decline = 0.20             # YoY net profit fall
+min_cfo_to_pat = 0.6
+max_debt_to_equity = 1.0
+min_interest_coverage = 2.5
+results_reminder_days = 7
+governance_categories = ["auditor_resignation", "auditor_qualification", "sebi_order", "insolvency",
+                         "regulatory_action", "credit_rating_downgrade", "pledge_change"]
+quiet_period_exempt = ["governance_event", "thesis_review"]
+
+[discovery]
+# Event-driven discovery (C): exchange filings that make a company worth (re)screening. An event alone never
+# qualifies a company - it must still pass every screening rule.
+event_categories = ["results", "order_win", "acquisition", "capacity_expansion", "credit_rating_upgrade"]
+event_lookback_days = 2
+# Sector discovery (D): industries whose latest-quarter earnings are improving.
+min_industry_companies = 3
+sector_tailwind_boost = 5.0       # added to research-queue priority, never to the score itself
+# Screening fetch budget: skip fetching fundamentals for stocks below the liquidity floor when prices are synced.
+liquidity_prefilter = true

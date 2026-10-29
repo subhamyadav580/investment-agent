@@ -1,0 +1,29 @@
+# Python / tooling
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Secrets: only the template is committed
+.env
+.env.*
+!.env.example
+
+# Local databases and logs
+*.db
+*.sqlite
+*.log
+
+# Downloaded third-party data (re-fetched automatically; never commit)
+data/cache/
+data/local/*
+!data/local/README.md
+!data/local/example/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/

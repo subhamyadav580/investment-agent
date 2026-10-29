@@ -1,0 +1,42 @@
+[project]
+name = "investment-agent"
+version = "0.1.0"
+description = "Personal AI-assisted research and alerting agent for Indian equities (NSE/BSE). Research only - no trade execution."
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.20.1",
+    "anthropic>=2.3.0",
+    "apscheduler>=3.11.3",
+    "beautifulsoup4>=4.15.0",
+    "fastapi>=0.162.0",
+    "httpx>=0.28.1",
+    "langgraph>=1.2.17",
+    "openai>=3.37.0",
+    "pandas>=3.1.0",
+    "psycopg[binary]>=3.3.6",
+    "pydantic-settings>=2.16.1",
+    "sqlalchemy>=2",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.17.2",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]  # line length is left to judgment; dense rule tables are clearer on one line
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Header", "fastapi.Query"]

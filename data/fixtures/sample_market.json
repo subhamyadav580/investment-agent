@@ -1,0 +1,1611 @@
+{
+ "note": "SYNTHETIC DATA. All companies and figures are fictional, for development and testing only.",
+ "as_of": "2026-10-23",
+ "universe": [
+  {
+   "symbol": "SMPLALPHA",
+   "name": "Alpha Precision Engineering Ltd (SAMPLE)",
+   "isin": "INE901X01011",
+   "series": "EQ",
+   "instrument_type": "EQUITY",
+   "is_sme": false,
+   "listed_on": "2008-04-10"
+  },
+  {
+   "symbol": "SMPLBETA",
+   "name": "Beta Consumer Brands Ltd (SAMPLE)",
+   "isin": "INE902X01012",
+   "series": "EQ",
+   "instrument_type": "EQUITY",
+   "is_sme": false,
+   "listed_on": "2004-01-15"
+  },
+  {
+   "symbol": "SMPLGAMMA",
+   "name": "Gamma Steel & Alloys Ltd (SAMPLE)",
+   "isin": "INE903X01013",
+   "series": "EQ",
+   "instrument_type": "EQUITY",
+   "is_sme": false,
+   "listed_on": "1996-07-01"
+  },
+  {
+   "symbol": "SMPLDELTA",
+   "name": "Delta Small Finance Bank Ltd (SAMPLE)",
+   "isin": "INE904X01014",
+   "series": "EQ",
+   "instrument_type": "EQUITY",
+   "is_sme": false,
+   "listed_on": "2018-11-20"
+  },
+  {
+   "symbol": "SMPLEPSILON",
+   "name": "Epsilon Infra Projects Ltd (SAMPLE)",
+   "isin": "INE905X01015",
+   "series": "EQ",
+   "instrument_type": "EQUITY",
+   "is_sme": false,
+   "listed_on": "2012-03-05"
+  },
+  {
+   "symbol": "SMPLZETA",
+   "name": "Zeta Pharma Labs Ltd (SAMPLE)",
+   "isin": "INE906X01016",
+   "series": "EQ",
+   "instrument_type": "EQUITY",
+   "is_sme": false,
+   "listed_on": "2010-09-09"
+  },
+  {
+   "symbol": "SMPLETA",
+   "name": "Eta Textiles Ltd (SAMPLE)",
+   "isin": "INE907X01017",
+   "series": "EQ",
+   "instrument_type": "EQUITY",
+   "is_sme": false,
+   "listed_on": "2001-02-02"
+  },
+  {
+   "symbol": "SMPLTHETA",
+   "name": "Theta Software Services Ltd (SAMPLE)",
+   "isin": "INE908X01018",
+   "series": "EQ",
+   "instrument_type": "EQUITY",
+   "is_sme": false,
+   "listed_on": "2024-06-18"
+  },
+  {
+   "symbol": "SMPLIOTA",
+   "name": "Iota Chemicals Ltd (SAMPLE)",
+   "isin": "INE909X01019",
+   "series": "BE",
+   "instrument_type": "EQUITY",
+   "is_sme": false,
+   "listed_on": "2015-05-25"
+  },
+  {
+   "symbol": "SMPLKAPPA",
+   "name": "Kappa Retail Ltd (SAMPLE)",
+   "isin": "INE910X01010",
+   "series": "EQ",
+   "instrument_type": "EQUITY",
+   "is_sme": false,
+   "listed_on": "2017-08-14"
+  },
+  {
+   "symbol": "SMPLMU",
+   "name": "Mu Auto Components Ltd (SAMPLE)",
+   "isin": "INE911X01011",
+   "series": "EQ",
+   "instrument_type": "EQUITY",
+   "is_sme": false,
+   "listed_on": "2006-12-11"
+  },
+  {
+   "symbol": "SMPLNU",
+   "name": "Nu Electricals Ltd (SAMPLE)",
+   "isin": "INE912X01012",
+   "series": "EQ",
+   "instrument_type": "EQUITY",
+   "is_sme": false,
+   "listed_on": "2009-10-01"
+  },
+  {
+   "symbol": "SMPLLAMBDA",
+   "name": "Lambda Agro Ltd (SAMPLE)",
+   "isin": "INE913X01013",
+   "series": "SM",
+   "instrument_type": "EQUITY",
+   "is_sme": true,
+   "listed_on": "2023-03-30"
+  },
+  {
+   "symbol": "SMPLNIFTYETF",
+   "name": "Sample Nifty Index ETF (SAMPLE)",
+   "isin": "INE914X01014",
+   "series": "EQ",
+   "instrument_type": "ETF",
+   "is_sme": false,
+   "listed_on": "2019-01-01"
+  }
+ ],
+ "companies": {
+  "SMPLALPHA": {
+   "sector": "Industrials",
+   "industry": "Industrial Machinery",
+   "unit": "INR_crore",
+   "consolidation": "consolidated",
+   "shares_outstanding_cr": 12.0,
+   "source": {
+    "source_type": "fixture",
+    "title": "SYNTHETIC sample financials (fictional company)",
+    "published_at": "2026-05-20T18:00:00+05:30"
+   },
+   "annual": {
+    "FY2021": {
+     "revenue": 800,
+     "operating_profit": 168.0,
+     "depreciation": 24.0,
+     "interest": 6,
+     "pbt": 146.0,
+     "net_profit": 109.5,
+     "exceptional_items": 0.0,
+     "total_equity": 687.6,
+     "total_debt": 60,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 987.6,
+     "receivables": 120.55,
+     "cfo": 104.02
+    },
+    "FY2022": {
+     "revenue": 920.0,
+     "operating_profit": 193.2,
+     "depreciation": 27.6,
+     "interest": 6,
+     "pbt": 168.8,
+     "net_profit": 126.6,
+     "exceptional_items": 0.0,
+     "total_equity": 788.88,
+     "total_debt": 60,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1124.88,
+     "receivables": 138.63,
+     "cfo": 120.27
+    },
+    "FY2023": {
+     "revenue": 1058.0,
+     "operating_profit": 222.18,
+     "depreciation": 31.74,
+     "interest": 6,
+     "pbt": 195.02,
+     "net_profit": 146.26,
+     "exceptional_items": 0.0,
+     "total_equity": 905.89,
+     "total_debt": 60,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1283.29,
+     "receivables": 159.42,
+     "cfo": 138.95
+    },
+    "FY2024": {
+     "revenue": 1216.7,
+     "operating_profit": 255.51,
+     "depreciation": 36.5,
+     "interest": 6,
+     "pbt": 225.17,
+     "net_profit": 168.88,
+     "exceptional_items": 0.0,
+     "total_equity": 1041.0,
+     "total_debt": 60,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1466.01,
+     "receivables": 183.34,
+     "cfo": 160.44
+    },
+    "FY2025": {
+     "revenue": 1399.2,
+     "operating_profit": 293.83,
+     "depreciation": 41.98,
+     "interest": 6,
+     "pbt": 259.85,
+     "net_profit": 194.89,
+     "exceptional_items": 0.0,
+     "total_equity": 1196.91,
+     "total_debt": 60,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1676.67,
+     "receivables": 210.84,
+     "cfo": 185.14
+    },
+    "FY2026": {
+     "revenue": 1609.09,
+     "operating_profit": 337.91,
+     "depreciation": 48.27,
+     "interest": 6,
+     "pbt": 299.73,
+     "net_profit": 224.79,
+     "exceptional_items": 0.0,
+     "total_equity": 1376.74,
+     "total_debt": 60,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1919.47,
+     "receivables": 242.46,
+     "cfo": 213.55
+    }
+   },
+   "price_model": {
+    "end_price": 524.51,
+    "last_date": "2026-10-23",
+    "days": 1100,
+    "annual_drift": 0.12,
+    "daily_vol": 0.016,
+    "avg_volume": 180000
+   },
+   "shareholding": [
+    {
+     "period_end": "2025-09-30",
+     "promoter_holding_pct": 58.0,
+     "promoter_pledged_pct": 0.0
+    },
+    {
+     "period_end": "2026-09-30",
+     "promoter_holding_pct": 58.0,
+     "promoter_pledged_pct": 0.0
+    }
+   ],
+   "announcements": [
+    {
+     "category": "board_meeting",
+     "title": "SMPLALPHA: board meeting to consider Q2 FY2027 results",
+     "published_at": "2026-10-20T10:00:00+05:30",
+     "event_date": "2026-10-29"
+    }
+   ]
+  },
+  "SMPLBETA": {
+   "sector": "Consumer Staples",
+   "industry": "Packaged Foods",
+   "unit": "INR_crore",
+   "consolidation": "consolidated",
+   "shares_outstanding_cr": 20.0,
+   "source": {
+    "source_type": "fixture",
+    "title": "SYNTHETIC sample financials (fictional company)",
+    "published_at": "2026-05-20T18:00:00+05:30"
+   },
+   "annual": {
+    "FY2021": {
+     "revenue": 1500,
+     "operating_profit": 285.0,
+     "depreciation": 30.0,
+     "interest": 0,
+     "pbt": 270.0,
+     "net_profit": 202.5,
+     "exceptional_items": 0.0,
+     "total_equity": 1062.0,
+     "total_debt": 0,
+     "cash_and_equivalents": 300,
+     "total_assets": 1512.0,
+     "receivables": 226.03,
+     "cfo": 192.38
+    },
+    "FY2022": {
+     "revenue": 1665.0,
+     "operating_profit": 316.35,
+     "depreciation": 33.3,
+     "interest": 0,
+     "pbt": 299.7,
+     "net_profit": 224.77,
+     "exceptional_items": 0.0,
+     "total_equity": 1241.82,
+     "total_debt": 0,
+     "cash_and_equivalents": 300,
+     "total_assets": 1741.32,
+     "receivables": 250.89,
+     "cfo": 213.54
+    },
+    "FY2023": {
+     "revenue": 1848.15,
+     "operating_profit": 351.15,
+     "depreciation": 36.96,
+     "interest": 0,
+     "pbt": 332.67,
+     "net_profit": 249.5,
+     "exceptional_items": 0.0,
+     "total_equity": 1441.42,
+     "total_debt": 0,
+     "cash_and_equivalents": 300,
+     "total_assets": 1995.87,
+     "receivables": 278.49,
+     "cfo": 237.03
+    },
+    "FY2024": {
+     "revenue": 2051.45,
+     "operating_profit": 389.77,
+     "depreciation": 41.03,
+     "interest": 0,
+     "pbt": 369.26,
+     "net_profit": 276.95,
+     "exceptional_items": 0.0,
+     "total_equity": 1662.98,
+     "total_debt": 0,
+     "cash_and_equivalents": 300,
+     "total_assets": 2278.41,
+     "receivables": 309.12,
+     "cfo": 263.1
+    },
+    "FY2025": {
+     "revenue": 2277.11,
+     "operating_profit": 432.65,
+     "depreciation": 45.54,
+     "interest": 0,
+     "pbt": 409.88,
+     "net_profit": 307.41,
+     "exceptional_items": 0.0,
+     "total_equity": 1908.9,
+     "total_debt": 0,
+     "cash_and_equivalents": 300,
+     "total_assets": 2592.04,
+     "receivables": 343.13,
+     "cfo": 292.04
+    },
+    "FY2026": {
+     "revenue": 2527.59,
+     "operating_profit": 480.24,
+     "depreciation": 50.55,
+     "interest": 0,
+     "pbt": 454.97,
+     "net_profit": 341.22,
+     "exceptional_items": 0.0,
+     "total_equity": 2181.88,
+     "total_debt": 0,
+     "cash_and_equivalents": 300,
+     "total_assets": 2940.16,
+     "receivables": 380.87,
+     "cfo": 324.16
+    }
+   },
+   "price_model": {
+    "end_price": 1057.78,
+    "last_date": "2026-10-23",
+    "days": 1100,
+    "annual_drift": 0.12,
+    "daily_vol": 0.016,
+    "avg_volume": 300000
+   },
+   "shareholding": [
+    {
+     "period_end": "2025-09-30",
+     "promoter_holding_pct": 65.0,
+     "promoter_pledged_pct": 0.0
+    },
+    {
+     "period_end": "2026-09-30",
+     "promoter_holding_pct": 65.0,
+     "promoter_pledged_pct": 0.0
+    }
+   ]
+  },
+  "SMPLGAMMA": {
+   "sector": "Materials",
+   "industry": "Steel",
+   "unit": "INR_crore",
+   "consolidation": "consolidated",
+   "shares_outstanding_cr": 50.0,
+   "source": {
+    "source_type": "fixture",
+    "title": "SYNTHETIC sample financials (fictional company)",
+    "published_at": "2026-05-20T18:00:00+05:30"
+   },
+   "annual": {
+    "FY2021": {
+     "revenue": 5000,
+     "operating_profit": 800.0,
+     "depreciation": 250.0,
+     "interest": 260.0,
+     "pbt": 340.0,
+     "net_profit": 255.0,
+     "exceptional_items": 0.0,
+     "total_equity": 1704.0,
+     "total_debt": 2600,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 5804.0,
+     "receivables": 753.42,
+     "cfo": 242.25
+    },
+    "FY2022": {
+     "revenue": 6250.0,
+     "operating_profit": 1250.0,
+     "depreciation": 312.5,
+     "interest": 280.0,
+     "pbt": 720.0,
+     "net_profit": 540.0,
+     "exceptional_items": 0.0,
+     "total_equity": 2136.0,
+     "total_debt": 2800,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 6811.0,
+     "receivables": 941.78,
+     "cfo": 513.0
+    },
+    "FY2023": {
+     "revenue": 5125.0,
+     "operating_profit": 358.75,
+     "depreciation": 256.25,
+     "interest": 300.0,
+     "pbt": -146.25,
+     "net_profit": -146.25,
+     "exceptional_items": 0.0,
+     "total_equity": 2019.0,
+     "total_debt": 3000,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 6556.5,
+     "receivables": 772.26,
+     "cfo": -73.12
+    },
+    "FY2024": {
+     "revenue": 5637.5,
+     "operating_profit": 676.5,
+     "depreciation": 281.88,
+     "interest": 310.0,
+     "pbt": 141.0,
+     "net_profit": 105.75,
+     "exceptional_items": 0.0,
+     "total_equity": 2103.6,
+     "total_debt": 3100,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 6894.85,
+     "receivables": 849.49,
+     "cfo": 100.46
+    },
+    "FY2025": {
+     "revenue": 5355.63,
+     "operating_profit": 455.23,
+     "depreciation": 267.78,
+     "interest": 320.0,
+     "pbt": -79.0,
+     "net_profit": -79.0,
+     "exceptional_items": 0.0,
+     "total_equity": 2040.4,
+     "total_debt": 3200,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 6847.09,
+     "receivables": 807.01,
+     "cfo": -39.5
+    },
+    "FY2026": {
+     "revenue": 5784.08,
+     "operating_profit": 578.41,
+     "depreciation": 289.2,
+     "interest": 330.0,
+     "pbt": 17.04,
+     "net_profit": 12.78,
+     "exceptional_items": 0.0,
+     "total_equity": 2050.63,
+     "total_debt": 3300,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 7085.85,
+     "receivables": 871.57,
+     "cfo": 12.14
+    }
+   },
+   "price_model": {
+    "end_price": 2.3,
+    "last_date": "2026-10-23",
+    "days": 1100,
+    "annual_drift": 0.12,
+    "daily_vol": 0.016,
+    "avg_volume": 900000
+   },
+   "shareholding": [
+    {
+     "period_end": "2025-09-30",
+     "promoter_holding_pct": 52.0,
+     "promoter_pledged_pct": 12.0
+    },
+    {
+     "period_end": "2026-09-30",
+     "promoter_holding_pct": 52.0,
+     "promoter_pledged_pct": 12.0
+    }
+   ]
+  },
+  "SMPLDELTA": {
+   "sector": "Financial Services",
+   "industry": "Small Finance Bank",
+   "unit": "INR_crore",
+   "consolidation": "consolidated",
+   "shares_outstanding_cr": 80.0,
+   "source": {
+    "source_type": "fixture",
+    "title": "SYNTHETIC sample financials (fictional company)",
+    "published_at": "2026-05-20T18:00:00+05:30"
+   },
+   "annual": {
+    "FY2021": {
+     "revenue": 1900.0,
+     "net_interest_income": 840.0,
+     "interest": 1040.0,
+     "pbt": 426.67,
+     "net_profit": 320.0,
+     "total_equity": 2200.0,
+     "total_assets": 20000,
+     "gross_npa_pct": 3.1,
+     "net_npa_pct": 0.88,
+     "capital_adequacy_ratio": 17.5
+    },
+    "FY2022": {
+     "revenue": 2242.0,
+     "net_interest_income": 991.2,
+     "interest": 1227.2,
+     "pbt": 503.47,
+     "net_profit": 377.6,
+     "total_equity": 2596.0,
+     "total_assets": 23600.0,
+     "gross_npa_pct": 3.1,
+     "net_npa_pct": 0.88,
+     "capital_adequacy_ratio": 17.5
+    },
+    "FY2023": {
+     "revenue": 2645.56,
+     "net_interest_income": 1169.62,
+     "interest": 1448.1,
+     "pbt": 594.09,
+     "net_profit": 445.57,
+     "total_equity": 3063.28,
+     "total_assets": 27848.0,
+     "gross_npa_pct": 2.5,
+     "net_npa_pct": 0.88,
+     "capital_adequacy_ratio": 17.5
+    },
+    "FY2024": {
+     "revenue": 3121.76,
+     "net_interest_income": 1380.15,
+     "interest": 1708.75,
+     "pbt": 701.03,
+     "net_profit": 525.77,
+     "total_equity": 3614.67,
+     "total_assets": 32860.64,
+     "gross_npa_pct": 2.5,
+     "net_npa_pct": 0.88,
+     "capital_adequacy_ratio": 17.5
+    },
+    "FY2025": {
+     "revenue": 3683.68,
+     "net_interest_income": 1628.57,
+     "interest": 2016.33,
+     "pbt": 827.21,
+     "net_profit": 620.41,
+     "total_equity": 4265.31,
+     "total_assets": 38775.56,
+     "gross_npa_pct": 2.5,
+     "net_npa_pct": 0.88,
+     "capital_adequacy_ratio": 17.5
+    },
+    "FY2026": {
+     "revenue": 4346.74,
+     "net_interest_income": 1921.72,
+     "interest": 2379.27,
+     "pbt": 976.11,
+     "net_profit": 732.08,
+     "total_equity": 5033.07,
+     "total_assets": 45755.16,
+     "gross_npa_pct": 2.5,
+     "net_npa_pct": 0.88,
+     "capital_adequacy_ratio": 17.5
+    }
+   },
+   "price_model": {
+    "end_price": 128.11,
+    "last_date": "2026-10-23",
+    "days": 1100,
+    "annual_drift": 0.12,
+    "daily_vol": 0.016,
+    "avg_volume": 1500000
+   },
+   "shareholding": [
+    {
+     "period_end": "2025-09-30",
+     "promoter_holding_pct": 40.0,
+     "promoter_pledged_pct": 0.0
+    },
+    {
+     "period_end": "2026-09-30",
+     "promoter_holding_pct": 40.0,
+     "promoter_pledged_pct": 0.0
+    }
+   ]
+  },
+  "SMPLEPSILON": {
+   "sector": "Industrials",
+   "industry": "Construction & Engineering",
+   "unit": "INR_crore",
+   "consolidation": "consolidated",
+   "shares_outstanding_cr": 15.0,
+   "source": {
+    "source_type": "fixture",
+    "title": "SYNTHETIC sample financials (fictional company)",
+    "published_at": "2026-05-20T18:00:00+05:30"
+   },
+   "annual": {
+    "FY2021": {
+     "revenue": 1200,
+     "operating_profit": 168.0,
+     "depreciation": 36.0,
+     "interest": 40,
+     "pbt": 104.0,
+     "net_profit": 78.0,
+     "exceptional_items": 0.0,
+     "total_equity": 762.4,
+     "total_debt": 400,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1522.4,
+     "receivables": 295.89,
+     "cfo": -7.8
+    },
+    "FY2022": {
+     "revenue": 1416.0,
+     "operating_profit": 198.24,
+     "depreciation": 42.48,
+     "interest": 40,
+     "pbt": 129.92,
+     "net_profit": 97.44,
+     "exceptional_items": 0.0,
+     "total_equity": 840.35,
+     "total_debt": 400,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1665.15,
+     "receivables": 426.74,
+     "cfo": -9.74
+    },
+    "FY2023": {
+     "revenue": 1670.88,
+     "operating_profit": 233.92,
+     "depreciation": 50.13,
+     "interest": 40,
+     "pbt": 160.51,
+     "net_profit": 120.38,
+     "exceptional_items": 0.0,
+     "total_equity": 936.66,
+     "total_debt": 400,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1837.92,
+     "receivables": 595.11,
+     "cfo": -12.04
+    },
+    "FY2024": {
+     "revenue": 1971.64,
+     "operating_profit": 276.03,
+     "depreciation": 59.15,
+     "interest": 40,
+     "pbt": 196.6,
+     "net_profit": 147.45,
+     "exceptional_items": 0.0,
+     "total_equity": 1054.61,
+     "total_debt": 400,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2046.1,
+     "receivables": 810.26,
+     "cfo": -14.74
+    },
+    "FY2025": {
+     "revenue": 2326.53,
+     "operating_profit": 325.71,
+     "depreciation": 69.8,
+     "interest": 40,
+     "pbt": 239.18,
+     "net_profit": 179.39,
+     "exceptional_items": 0.0,
+     "total_equity": 1198.12,
+     "total_debt": 400,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2296.08,
+     "receivables": 1115.46,
+     "cfo": -17.94
+    },
+    "FY2026": {
+     "revenue": 2745.31,
+     "operating_profit": 384.34,
+     "depreciation": 82.36,
+     "interest": 40,
+     "pbt": 289.44,
+     "net_profit": 217.08,
+     "exceptional_items": 0.0,
+     "total_equity": 1371.79,
+     "total_debt": 400,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2595.38,
+     "receivables": 1504.28,
+     "cfo": -21.71
+    }
+   },
+   "price_model": {
+    "end_price": 318.38,
+    "last_date": "2026-10-23",
+    "days": 1100,
+    "annual_drift": 0.12,
+    "daily_vol": 0.016,
+    "avg_volume": 400000
+   },
+   "shareholding": [
+    {
+     "period_end": "2025-09-30",
+     "promoter_holding_pct": 55.0,
+     "promoter_pledged_pct": 8.0
+    },
+    {
+     "period_end": "2026-09-30",
+     "promoter_holding_pct": 55.0,
+     "promoter_pledged_pct": 8.0
+    }
+   ]
+  },
+  "SMPLZETA": {
+   "sector": "Health Care",
+   "industry": "Pharmaceuticals",
+   "unit": "INR_crore",
+   "consolidation": "consolidated",
+   "shares_outstanding_cr": 10.0,
+   "source": {
+    "source_type": "fixture",
+    "title": "SYNTHETIC sample financials (fictional company)",
+    "published_at": "2026-05-20T18:00:00+05:30"
+   },
+   "annual": {
+    "FY2021": {
+     "revenue": 950,
+     "operating_profit": 218.5,
+     "depreciation": 28.5,
+     "interest": 3,
+     "pbt": 196.5,
+     "net_profit": 147.38,
+     "exceptional_items": 0.0,
+     "total_equity": 917.9,
+     "total_debt": 30,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1232.9,
+     "receivables": 143.15,
+     "cfo": 140.01
+    },
+    "FY2022": {
+     "revenue": 1073.5,
+     "operating_profit": 246.91,
+     "depreciation": 32.2,
+     "interest": 3,
+     "pbt": 222.44,
+     "net_profit": 166.83,
+     "exceptional_items": 0.0,
+     "total_equity": 1051.36,
+     "total_debt": 30,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1403.41,
+     "receivables": 161.76,
+     "cfo": 158.48
+    },
+    "FY2023": {
+     "revenue": 1213.05,
+     "operating_profit": 279.0,
+     "depreciation": 36.39,
+     "interest": 3,
+     "pbt": 251.74,
+     "net_profit": 188.81,
+     "exceptional_items": 0.0,
+     "total_equity": 1202.41,
+     "total_debt": 30,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1596.32,
+     "receivables": 182.79,
+     "cfo": 179.37
+    },
+    "FY2024": {
+     "revenue": 1370.75,
+     "operating_profit": 315.27,
+     "depreciation": 41.12,
+     "interest": 3,
+     "pbt": 284.86,
+     "net_profit": 213.64,
+     "exceptional_items": 0.0,
+     "total_equity": 1373.32,
+     "total_debt": 30,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1814.55,
+     "receivables": 206.55,
+     "cfo": 202.96
+    },
+    "FY2025": {
+     "revenue": 1548.95,
+     "operating_profit": 356.26,
+     "depreciation": 46.47,
+     "interest": 3,
+     "pbt": 322.28,
+     "net_profit": 241.71,
+     "exceptional_items": 0.0,
+     "total_equity": 1566.69,
+     "total_debt": 30,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2061.37,
+     "receivables": 233.4,
+     "cfo": 229.62
+    },
+    "FY2026": {
+     "revenue": 1750.31,
+     "operating_profit": 402.57,
+     "depreciation": 52.51,
+     "interest": 3,
+     "pbt": 364.57,
+     "net_profit": 273.42,
+     "exceptional_items": 0.0,
+     "total_equity": 1785.43,
+     "total_debt": 30,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2340.52,
+     "receivables": 263.75,
+     "cfo": 259.75
+    }
+   },
+   "price_model": {
+    "end_price": 656.21,
+    "last_date": "2026-10-23",
+    "days": 1100,
+    "annual_drift": 0.12,
+    "daily_vol": 0.016,
+    "avg_volume": 250000
+   },
+   "shareholding": [
+    {
+     "period_end": "2025-09-30",
+     "promoter_holding_pct": 60.0,
+     "promoter_pledged_pct": 0.0
+    },
+    {
+     "period_end": "2026-09-30",
+     "promoter_holding_pct": 60.0,
+     "promoter_pledged_pct": 0.0
+    }
+   ],
+   "announcements": [
+    {
+     "category": "auditor_resignation",
+     "title": "SMPLZETA: Resignation of statutory auditor citing non-receipt of information",
+     "published_at": "2026-09-12T19:30:00+05:30"
+    }
+   ]
+  },
+  "SMPLETA": {
+   "sector": "Consumer Discretionary",
+   "industry": "Textiles",
+   "unit": "INR_crore",
+   "consolidation": "consolidated",
+   "shares_outstanding_cr": 8.0,
+   "source": {
+    "source_type": "fixture",
+    "title": "SYNTHETIC sample financials (fictional company)",
+    "published_at": "2026-05-20T18:00:00+05:30"
+   },
+   "annual": {
+    "FY2021": {
+     "revenue": 600,
+     "operating_profit": 72.0,
+     "depreciation": 18.0,
+     "interest": 5.0,
+     "pbt": 55.0,
+     "net_profit": 41.25,
+     "exceptional_items": 0.0,
+     "total_equity": 433.0,
+     "total_debt": 50.0,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 663.0,
+     "receivables": 90.41,
+     "cfo": 39.19
+    },
+    "FY2022": {
+     "revenue": 636.0,
+     "operating_profit": 76.32,
+     "depreciation": 19.08,
+     "interest": 5.0,
+     "pbt": 58.6,
+     "net_profit": 43.95,
+     "exceptional_items": 0.0,
+     "total_equity": 468.16,
+     "total_debt": 50.0,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 708.96,
+     "receivables": 95.84,
+     "cfo": 41.75
+    },
+    "FY2023": {
+     "revenue": 674.16,
+     "operating_profit": 80.9,
+     "depreciation": 20.22,
+     "interest": 5.0,
+     "pbt": 62.42,
+     "net_profit": 46.81,
+     "exceptional_items": 0.0,
+     "total_equity": 505.61,
+     "total_debt": 50.0,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 757.86,
+     "receivables": 101.59,
+     "cfo": 44.47
+    }
+   },
+   "price_model": {
+    "end_price": 87.77,
+    "last_date": "2026-10-23",
+    "days": 1100,
+    "annual_drift": 0.12,
+    "daily_vol": 0.016,
+    "avg_volume": 120000
+   }
+  },
+  "SMPLTHETA": {
+   "sector": "Information Technology",
+   "industry": "IT Services",
+   "unit": "INR_crore",
+   "consolidation": "consolidated",
+   "shares_outstanding_cr": 6.0,
+   "source": {
+    "source_type": "fixture",
+    "title": "SYNTHETIC sample financials (fictional company)",
+    "published_at": "2026-05-20T18:00:00+05:30"
+   },
+   "annual": {
+    "FY2025": {
+     "revenue": 300,
+     "operating_profit": 75.0,
+     "depreciation": 9.0,
+     "interest": 0,
+     "pbt": 69.0,
+     "net_profit": 51.75,
+     "exceptional_items": 0.0,
+     "total_equity": 541.4,
+     "total_debt": 0,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 631.4,
+     "receivables": 45.21,
+     "cfo": 49.16
+    },
+    "FY2026": {
+     "revenue": 390.0,
+     "operating_profit": 97.5,
+     "depreciation": 11.7,
+     "interest": 0,
+     "pbt": 89.7,
+     "net_profit": 67.28,
+     "exceptional_items": 0.0,
+     "total_equity": 595.22,
+     "total_debt": 0,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 712.22,
+     "receivables": 58.77,
+     "cfo": 63.91
+    }
+   },
+   "price_model": {
+    "end_price": 448.53,
+    "last_date": "2026-10-23",
+    "days": 1100,
+    "annual_drift": 0.12,
+    "daily_vol": 0.016,
+    "avg_volume": 200000
+   }
+  },
+  "SMPLIOTA": {
+   "sector": "Materials",
+   "industry": "Specialty Chemicals",
+   "unit": "INR_crore",
+   "consolidation": "consolidated",
+   "shares_outstanding_cr": 4.0,
+   "source": {
+    "source_type": "fixture",
+    "title": "SYNTHETIC sample financials (fictional company)",
+    "published_at": "2026-05-20T18:00:00+05:30"
+   },
+   "annual": {
+    "FY2021": {
+     "revenue": 400,
+     "operating_profit": 72.0,
+     "depreciation": 12.0,
+     "interest": 4,
+     "pbt": 60.0,
+     "net_profit": 45.0,
+     "exceptional_items": 0.0,
+     "total_equity": 386.0,
+     "total_debt": 40,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 546.0,
+     "receivables": 60.27,
+     "cfo": 42.75
+    },
+    "FY2022": {
+     "revenue": 448.0,
+     "operating_profit": 80.64,
+     "depreciation": 13.44,
+     "interest": 4,
+     "pbt": 67.68,
+     "net_profit": 50.76,
+     "exceptional_items": 0.0,
+     "total_equity": 426.61,
+     "total_debt": 40,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 601.01,
+     "receivables": 67.51,
+     "cfo": 48.22
+    },
+    "FY2023": {
+     "revenue": 501.76,
+     "operating_profit": 90.32,
+     "depreciation": 15.05,
+     "interest": 4,
+     "pbt": 76.28,
+     "net_profit": 57.21,
+     "exceptional_items": 0.0,
+     "total_equity": 472.38,
+     "total_debt": 40,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 662.9,
+     "receivables": 75.61,
+     "cfo": 54.35
+    },
+    "FY2024": {
+     "revenue": 561.97,
+     "operating_profit": 101.15,
+     "depreciation": 16.86,
+     "interest": 4,
+     "pbt": 85.92,
+     "net_profit": 64.44,
+     "exceptional_items": 0.0,
+     "total_equity": 523.93,
+     "total_debt": 40,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 732.52,
+     "receivables": 84.68,
+     "cfo": 61.21
+    },
+    "FY2025": {
+     "revenue": 629.41,
+     "operating_profit": 113.29,
+     "depreciation": 18.88,
+     "interest": 4,
+     "pbt": 96.71,
+     "net_profit": 72.53,
+     "exceptional_items": 0.0,
+     "total_equity": 581.95,
+     "total_debt": 40,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 810.77,
+     "receivables": 94.84,
+     "cfo": 68.9
+    },
+    "FY2026": {
+     "revenue": 704.94,
+     "operating_profit": 126.89,
+     "depreciation": 21.15,
+     "interest": 4,
+     "pbt": 108.79,
+     "net_profit": 81.59,
+     "exceptional_items": 0.0,
+     "total_equity": 647.22,
+     "total_debt": 40,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 898.7,
+     "receivables": 106.22,
+     "cfo": 77.51
+    }
+   },
+   "price_model": {
+    "end_price": 407.95,
+    "last_date": "2026-10-23",
+    "days": 1100,
+    "annual_drift": 0.12,
+    "daily_vol": 0.016,
+    "avg_volume": 300
+   },
+   "shareholding": [
+    {
+     "period_end": "2025-09-30",
+     "promoter_holding_pct": 70.0,
+     "promoter_pledged_pct": 0.0
+    },
+    {
+     "period_end": "2026-09-30",
+     "promoter_holding_pct": 70.0,
+     "promoter_pledged_pct": 0.0
+    }
+   ]
+  },
+  "SMPLKAPPA": {
+   "sector": "Consumer Discretionary",
+   "industry": "Retail",
+   "unit": "INR_crore",
+   "consolidation": "consolidated",
+   "shares_outstanding_cr": 25.0,
+   "source": {
+    "source_type": "fixture",
+    "title": "SYNTHETIC sample financials (fictional company)",
+    "published_at": "2026-05-20T18:00:00+05:30"
+   },
+   "annual": {
+    "FY2021": {
+     "revenue": 2200,
+     "operating_profit": 242.0,
+     "depreciation": 66.0,
+     "interest": 20,
+     "pbt": 178.0,
+     "net_profit": 133.5,
+     "exceptional_items": 0.0,
+     "total_equity": 1206.8,
+     "total_debt": 200,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2066.8,
+     "receivables": 331.51,
+     "cfo": 126.82
+    },
+    "FY2022": {
+     "revenue": 2508.0,
+     "operating_profit": 275.88,
+     "depreciation": 75.24,
+     "interest": 20,
+     "pbt": 205.72,
+     "net_profit": 154.29,
+     "exceptional_items": 0.0,
+     "total_equity": 1330.23,
+     "total_debt": 200,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2282.63,
+     "receivables": 377.92,
+     "cfo": 146.58
+    },
+    "FY2023": {
+     "revenue": 2859.12,
+     "operating_profit": 314.5,
+     "depreciation": 85.77,
+     "interest": 20,
+     "pbt": 237.32,
+     "net_profit": 177.99,
+     "exceptional_items": 0.0,
+     "total_equity": 1472.62,
+     "total_debt": 200,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2530.36,
+     "receivables": 430.83,
+     "cfo": 169.09
+    },
+    "FY2024": {
+     "revenue": 3259.4,
+     "operating_profit": 358.53,
+     "depreciation": 97.78,
+     "interest": 20,
+     "pbt": 273.35,
+     "net_profit": 205.01,
+     "exceptional_items": 0.0,
+     "total_equity": 1636.63,
+     "total_debt": 200,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2814.45,
+     "receivables": 491.14,
+     "cfo": 194.76
+    },
+    "FY2025": {
+     "revenue": 3715.71,
+     "operating_profit": 408.73,
+     "depreciation": 111.47,
+     "interest": 20,
+     "pbt": 314.41,
+     "net_profit": 235.81,
+     "exceptional_items": 0.0,
+     "total_equity": 1825.28,
+     "total_debt": 200,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 3139.99,
+     "receivables": 559.9,
+     "cfo": 224.02
+    },
+    "FY2026": {
+     "revenue": 4235.91,
+     "operating_profit": 465.95,
+     "depreciation": 127.08,
+     "interest": 20,
+     "pbt": 361.23,
+     "net_profit": 270.92,
+     "exceptional_items": 0.0,
+     "total_equity": 2042.02,
+     "total_debt": 200,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 3512.79,
+     "receivables": 638.29,
+     "cfo": 257.38
+    }
+   },
+   "price_model": {
+    "end_price": 379.29,
+    "last_date": "2026-10-23",
+    "days": 1100,
+    "annual_drift": 0.12,
+    "daily_vol": 0.016,
+    "avg_volume": 500000
+   },
+   "shareholding": [
+    {
+     "period_end": "2025-09-30",
+     "promoter_holding_pct": 51.0,
+     "promoter_pledged_pct": 0.0
+    },
+    {
+     "period_end": "2026-09-30",
+     "promoter_holding_pct": 51.0,
+     "promoter_pledged_pct": 0.0
+    }
+   ],
+   "alternate_values": [
+    {
+     "period": "FY2025",
+     "metric": "revenue",
+     "value": 3269.82,
+     "source_type": "secondary",
+     "source_title": "Secondary aggregator (synthetic)"
+    }
+   ]
+  },
+  "SMPLMU": {
+   "sector": "Consumer Discretionary",
+   "industry": "Auto Components",
+   "unit": "INR_crore",
+   "consolidation": "consolidated",
+   "shares_outstanding_cr": 30.0,
+   "source": {
+    "source_type": "fixture",
+    "title": "SYNTHETIC sample financials (fictional company)",
+    "published_at": "2026-05-20T18:00:00+05:30"
+   },
+   "annual": {
+    "FY2021": {
+     "revenue": 1800,
+     "operating_profit": 270.0,
+     "depreciation": 54.0,
+     "interest": 30,
+     "pbt": 204.0,
+     "net_profit": 153.0,
+     "exceptional_items": 0.0,
+     "total_equity": 1122.4,
+     "total_debt": 350,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2012.4,
+     "receivables": 271.23,
+     "cfo": 145.35
+    },
+    "FY2022": {
+     "revenue": 1980.0,
+     "operating_profit": 297.0,
+     "depreciation": 59.4,
+     "interest": 30,
+     "pbt": 227.4,
+     "net_profit": 170.55,
+     "exceptional_items": 0.0,
+     "total_equity": 1258.84,
+     "total_debt": 350,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2202.84,
+     "receivables": 298.36,
+     "cfo": 162.02
+    },
+    "FY2023": {
+     "revenue": 2178.0,
+     "operating_profit": 326.7,
+     "depreciation": 65.34,
+     "interest": 30,
+     "pbt": 253.14,
+     "net_profit": 189.86,
+     "exceptional_items": 0.0,
+     "total_equity": 1410.72,
+     "total_debt": 350,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2414.12,
+     "receivables": 328.19,
+     "cfo": 180.36
+    },
+    "FY2024": {
+     "revenue": 2395.8,
+     "operating_profit": 359.37,
+     "depreciation": 71.87,
+     "interest": 30,
+     "pbt": 281.45,
+     "net_profit": 211.09,
+     "exceptional_items": 0.0,
+     "total_equity": 1579.6,
+     "total_debt": 350,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2648.34,
+     "receivables": 361.01,
+     "cfo": 200.54
+    },
+    "FY2025": {
+     "revenue": 2635.38,
+     "operating_profit": 395.31,
+     "depreciation": 79.06,
+     "interest": 30,
+     "pbt": 312.6,
+     "net_profit": 234.45,
+     "exceptional_items": 0.0,
+     "total_equity": 1767.16,
+     "total_debt": 350,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 2907.77,
+     "receivables": 397.11,
+     "cfo": 222.73
+    },
+    "FY2026": {
+     "revenue": 2898.92,
+     "operating_profit": 434.84,
+     "depreciation": 86.97,
+     "interest": 30,
+     "pbt": 346.86,
+     "net_profit": 260.14,
+     "exceptional_items": 0.0,
+     "total_equity": 1975.27,
+     "total_debt": 350,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 3194.95,
+     "receivables": 436.82,
+     "cfo": 247.14
+    }
+   },
+   "price_model": {
+    "end_price": 156.08,
+    "last_date": "2026-10-23",
+    "days": 1100,
+    "annual_drift": 0.12,
+    "daily_vol": 0.016,
+    "avg_volume": 600000
+   },
+   "shareholding": [
+    {
+     "period_end": "2025-09-30",
+     "promoter_holding_pct": 55.0,
+     "promoter_pledged_pct": 32.0
+    },
+    {
+     "period_end": "2026-09-30",
+     "promoter_holding_pct": 48.0,
+     "promoter_pledged_pct": 32.0
+    }
+   ]
+  },
+  "SMPLNU": {
+   "sector": "Industrials",
+   "industry": "Electrical Equipment",
+   "unit": "INR_crore",
+   "consolidation": "consolidated",
+   "shares_outstanding_cr": 9.0,
+   "source": {
+    "source_type": "fixture",
+    "title": "SYNTHETIC sample financials (fictional company)",
+    "published_at": "2026-05-20T18:00:00+05:30"
+   },
+   "annual": {
+    "FY2021": {
+     "revenue": 650,
+     "operating_profit": 84.5,
+     "depreciation": 19.5,
+     "interest": 11,
+     "pbt": 60.5,
+     "net_profit": 45.38,
+     "exceptional_items": 0.0,
+     "total_equity": 536.3,
+     "total_debt": 120,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 851.3,
+     "receivables": 97.95,
+     "cfo": 43.11
+    },
+    "FY2022": {
+     "revenue": 708.5,
+     "operating_profit": 92.11,
+     "depreciation": 21.25,
+     "interest": 11,
+     "pbt": 66.94,
+     "net_profit": 50.2,
+     "exceptional_items": 0.0,
+     "total_equity": 576.46,
+     "total_debt": 120,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 909.01,
+     "receivables": 106.76,
+     "cfo": 47.69
+    },
+    "FY2023": {
+     "revenue": 772.27,
+     "operating_profit": 100.39,
+     "depreciation": 23.17,
+     "interest": 11,
+     "pbt": 73.95,
+     "net_profit": 55.46,
+     "exceptional_items": 0.0,
+     "total_equity": 620.83,
+     "total_debt": 120,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 972.51,
+     "receivables": 116.37,
+     "cfo": 52.69
+    },
+    "FY2024": {
+     "revenue": 841.77,
+     "operating_profit": 109.43,
+     "depreciation": 25.25,
+     "interest": 11,
+     "pbt": 81.59,
+     "net_profit": 61.2,
+     "exceptional_items": 0.0,
+     "total_equity": 669.79,
+     "total_debt": 120,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1042.32,
+     "receivables": 126.84,
+     "cfo": 58.14
+    },
+    "FY2025": {
+     "revenue": 917.53,
+     "operating_profit": 119.28,
+     "depreciation": 27.53,
+     "interest": 11,
+     "pbt": 89.93,
+     "net_profit": 67.45,
+     "exceptional_items": 0.0,
+     "total_equity": 723.74,
+     "total_debt": 120,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1119.0,
+     "receivables": 138.26,
+     "cfo": 64.07
+    },
+    "FY2026": {
+     "revenue": 1000.11,
+     "operating_profit": 130.01,
+     "depreciation": 30.0,
+     "interest": 11,
+     "pbt": 99.01,
+     "net_profit": 74.26,
+     "exceptional_items": 0.0,
+     "total_equity": 783.15,
+     "total_debt": 120,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 1203.18,
+     "receivables": 150.7,
+     "cfo": 70.55
+    }
+   },
+   "price_model": {
+    "end_price": 173.27,
+    "last_date": "2026-10-23",
+    "days": 1100,
+    "annual_drift": 0.12,
+    "daily_vol": 0.016,
+    "avg_volume": 350000
+   },
+   "shareholding": [
+    {
+     "period_end": "2025-09-30",
+     "promoter_holding_pct": 62.0,
+     "promoter_pledged_pct": 0.0
+    },
+    {
+     "period_end": "2026-09-30",
+     "promoter_holding_pct": 62.0,
+     "promoter_pledged_pct": 0.0
+    }
+   ]
+  },
+  "SMPLLAMBDA": {
+   "sector": "Consumer Staples",
+   "industry": "Agri Products",
+   "unit": "INR_crore",
+   "consolidation": "consolidated",
+   "shares_outstanding_cr": 1.0,
+   "source": {
+    "source_type": "fixture",
+    "title": "SYNTHETIC sample financials (fictional company)",
+    "published_at": "2026-05-20T18:00:00+05:30"
+   },
+   "annual": {
+    "FY2021": {
+     "revenue": 80,
+     "operating_profit": 12.0,
+     "depreciation": 2.4,
+     "interest": 1,
+     "pbt": 9.4,
+     "net_profit": 7.05,
+     "exceptional_items": 0.0,
+     "total_equity": 45.64,
+     "total_debt": 10,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 79.64,
+     "receivables": 12.05,
+     "cfo": 6.7
+    },
+    "FY2022": {
+     "revenue": 100.0,
+     "operating_profit": 15.0,
+     "depreciation": 3.0,
+     "interest": 1,
+     "pbt": 12.0,
+     "net_profit": 9.0,
+     "exceptional_items": 0.0,
+     "total_equity": 52.84,
+     "total_debt": 10,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 92.84,
+     "receivables": 15.07,
+     "cfo": 8.55
+    },
+    "FY2023": {
+     "revenue": 125.0,
+     "operating_profit": 18.75,
+     "depreciation": 3.75,
+     "interest": 1,
+     "pbt": 15.25,
+     "net_profit": 11.44,
+     "exceptional_items": 0.0,
+     "total_equity": 61.99,
+     "total_debt": 10,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 109.49,
+     "receivables": 18.84,
+     "cfo": 10.87
+    },
+    "FY2024": {
+     "revenue": 156.25,
+     "operating_profit": 23.44,
+     "depreciation": 4.69,
+     "interest": 1,
+     "pbt": 19.31,
+     "net_profit": 14.48,
+     "exceptional_items": 0.0,
+     "total_equity": 73.58,
+     "total_debt": 10,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 130.45,
+     "receivables": 23.54,
+     "cfo": 13.76
+    },
+    "FY2025": {
+     "revenue": 195.31,
+     "operating_profit": 29.3,
+     "depreciation": 5.86,
+     "interest": 1,
+     "pbt": 24.39,
+     "net_profit": 18.29,
+     "exceptional_items": 0.0,
+     "total_equity": 88.21,
+     "total_debt": 10,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 156.81,
+     "receivables": 29.43,
+     "cfo": 17.38
+    },
+    "FY2026": {
+     "revenue": 244.14,
+     "operating_profit": 36.62,
+     "depreciation": 7.32,
+     "interest": 1,
+     "pbt": 30.74,
+     "net_profit": 23.05,
+     "exceptional_items": 0.0,
+     "total_equity": 106.65,
+     "total_debt": 10,
+     "cash_and_equivalents": 40.0,
+     "total_assets": 189.9,
+     "receivables": 36.79,
+     "cfo": 21.9
+    }
+   },
+   "price_model": {
+    "end_price": 461.0,
+    "last_date": "2026-10-23",
+    "days": 1100,
+    "annual_drift": 0.12,
+    "daily_vol": 0.016,
+    "avg_volume": 5000
+   }
+  }
+ }
+}
