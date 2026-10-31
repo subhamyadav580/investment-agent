@@ -1,6 +1,7 @@
 """resolve_company: map a free-text name/ticker to exactly one exchange-listed company."""
 
 from app.repos.company_repo import CompanyRepo
+from app.repos.price_repo import PriceRepo
 from app.services.data.normalization import normalize_symbol
 from app.services.graph.deps import GraphDeps
 from app.services.graph.state import ResearchState
@@ -29,7 +30,7 @@ def make_resolve_company(deps: GraphDeps):
                 options = ", ".join(f"{c.symbol} ({c.name})" for c in candidates)
                 return {"errors": [f"'{query}' is ambiguous; did you mean one of: {options}"]}
             else:
-                return {"errors": [f"No listed company found for '{query}'."]}
+                return {"errors": [_not_found_message(deps, query, symbol)]}
 
         if company.instrument_type != "EQUITY":
             return {"errors": [f"{company.symbol} is a {company.instrument_type}, not an operating company."]}
@@ -42,3 +43,16 @@ def make_resolve_company(deps: GraphDeps):
         }
 
     return resolve_company
+
+
+def _not_found_message(deps: GraphDeps, query: str, symbol: str) -> str:
+    """Explain *why* nothing was found when the symbol does trade (e.g. ETFs, which aren't companies)."""
+    traded = PriceRepo(deps.session).latest_row(symbol)
+    if traded is not None and (traded.isin or "").startswith("INF"):
+        return (f"{symbol} trades on {traded.exchange}, but it is a fund unit (ETF/mutual fund, ISIN {traded.isin}), "
+                "not an operating company. This tool researches companies only: ETFs have no revenue, profit or "
+                "balance sheet to analyse.")  # fmt: skip
+    if traded is not None:
+        return (f"{symbol} trades on {traded.exchange} (series {traded.series}) but is not in the listed-company "
+                "universe used for research (e.g. debt, REIT/InvIT or another non-equity instrument).")  # fmt: skip
+    return f"No listed company found for '{query}'."

@@ -118,3 +118,15 @@ def test_watchlisted_company_gets_deduplicated_alerts(session, providers, cfg, s
     assert entry.needs_review and entry.last_metrics
     svc.research("SMPLALPHA", AS_OF)
     assert session.query(Alert).count() == len(first.alerts)  # same events are not re-alerted
+
+
+def test_fund_units_get_an_explanation_not_just_not_found(session, providers, cfg, screened):
+    from datetime import date as d
+
+    from app.models import DailyPrice
+
+    session.add(DailyPrice(exchange="NSE", security_key="SILVERBEES", isin="INF204KC1402", series="EQ",
+                           trade_date=d(2026, 10, 23), close=184.5, volume=1e6, traded_value=1.8e8))  # fmt: skip
+    session.commit()
+    with pytest.raises(ResearchError, match="fund unit"):
+        service(session, providers, cfg, FakeLLM()).research("SILVERBEES", AS_OF)

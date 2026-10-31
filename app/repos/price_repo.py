@@ -50,3 +50,8 @@ class PriceRepo:
 
     def latest_date(self, exchange: str) -> date | None:
         return self.s.scalar(select(func.max(DailyPrice.trade_date)).where(DailyPrice.exchange == exchange))
+
+    def latest_row(self, security_key: str) -> DailyPrice | None:
+        return self.s.scalar(
+            select(DailyPrice).where(DailyPrice.security_key == security_key).order_by(DailyPrice.trade_date.desc()).limit(1)
+        )
