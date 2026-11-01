@@ -37,9 +37,16 @@ def render_context(state: ResearchState, *, include_valuation: bool = True) -> s
     dq = state["data_quality"]
     lines = [
         f"COMPANY: {state['company_name']} ({state['exchange']}:{state['symbol']})",
-        f"SECTOR: {state.get('sector') or 'unknown'} | group: {state['sector_group']} | as of {state['as_of_date']}",
-        f"SCREENING: status={ev.evaluation.status} score={ev.evaluation.score} "
+        f"SECTOR: {state.get('sector') or 'unknown'} | industry: {state.get('industry') or 'unknown'} | "
+        f"group: {state['sector_group']} | as of {state['as_of_date']}",
+        f"SCREENING: status={ev.evaluation.status} long-term score={ev.evaluation.score} "
         f"dimensions={json.dumps(ev.evaluation.dimension_scores)}",
+        f"HORIZONS: requested={state.get('horizon') or 'long_term'} years={json.dumps(state.get('horizon_years') or {})} "
+        f"medium-term score={ev.evaluation.horizon_scores.get('medium_term')} "
+        f"medium-term categories={json.dumps(ev.evaluation.medium_term_scores)}",
+        "CATALYSTS (from filings/industry data only): "
+        + (json.dumps([{k: v for k, v in c.items() if k != 'evidence_key'} for c in ev.evaluation.catalysts])
+           if ev.evaluation.catalysts else "none evidenced"),
         "",
         "METRICS (key | value | period | note):",
     ]
@@ -55,6 +62,16 @@ def render_context(state: ResearchState, *, include_valuation: bool = True) -> s
         for metric in sorted({v.metric for v in fin.values}):
             series = fin.series(metric)
             lines.append(f"{metric} | " + " | ".join(_cell(series.get(p)) for p in periods))
+
+    lines += ["", "SHAREHOLDING (period end | promoter % | % of promoter holding pledged):"]
+    holdings = ev.prepared.data.shareholding[-8:]
+    lines += [f"- {h.period_end} | {_cell(h.promoter_holding_pct)} | {_cell(h.promoter_pledged_pct)}" for h in holdings]
+    lines += [] if holdings else ["- not available"]
+
+    lines += ["", "INDUSTRY TREND (latest-quarter YoY across listed peers in the same industry):"]
+    trend = state.get("industry_trend")
+    lines.append(json.dumps(trend, default=str) if trend else "- not available (no universe screening run covering "
+                 "enough companies in this industry)")  # fmt: skip
 
     lines += ["", "SCREENING RULES:"]
     for r in ev.rules:

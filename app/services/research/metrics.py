@@ -16,6 +16,7 @@ from app.services.discovery.sector_classifier import FINANCIAL
 
 ICR_CAP = 100.0  # interest coverage reported as this when interest expense is zero
 CAGR_MAX_YEARS = 5
+CAGR_LONG_YEARS = 10  # long-run growth is reported when more than CAGR_MAX_YEARS of history exist
 
 
 def cagr(start: float | None, end: float | None, years: float) -> float | None:
@@ -68,11 +69,13 @@ def compute_metrics(data: CompanyData, sector_group: str, as_of: date) -> dict[s
             _health(ctx, out)
             _earnings_quality(ctx, out)
         _returns_on_equity(ctx, out)
+        _capital_allocation(ctx, sector_group, out)
         _quarterly_growth(data.financials, out)
         if data.prices and data.prices.bars:
             _valuation(ctx, data.prices, data.financials, sector_group, out)
     if data.prices and data.prices.bars:
         _liquidity(data.prices, as_of, out)
+    _ownership(data, as_of, out)
     return out
 
 
@@ -113,6 +116,17 @@ def _growth(ctx: _Ctx, out: dict[str, Metric]) -> None:
         value = None if a is None or b is None or a <= 0 else b / a - 1
         _put(out, key, value, "ratio", ctx.latest, None if value is not None else "previous period missing or "
              "non-positive", previous=a, latest=b)  # fmt: skip
+
+    _put(out, "history_years", float(len(ctx.periods)), "count", ctx.latest)
+    if len(ctx.periods) > CAGR_MAX_YEARS + 1:
+        window = ctx.periods[-(CAGR_LONG_YEARS + 1) :]
+        y = int(window[-1][2:]) - int(window[0][2:])
+        for metric, key in (("revenue", "revenue_cagr_long"), ("net_profit", "profit_cagr_long")):
+            a, b = ctx.v(metric, window[0]), ctx.v(metric, window[-1])
+            _put(out, key, cagr(a, b, y), "ratio", f"{window[0]}-{window[-1]}", start=a, end=b, years=y)
+    eq_a, eq_b = ctx.v("total_equity", start), ctx.v("total_equity", end)
+    _put(out, "book_value_cagr", cagr(eq_a, eq_b, years), "ratio", f"{start}-{end}" if start else None,
+         start=eq_a, end=eq_b, years=years)  # fmt: skip
 
     profits = [p for p in ctx.s("net_profit").values() if p is not None][-CAGR_MAX_YEARS:]
     ratio = (sum(p > 0 for p in profits) / len(profits)) if profits else None
@@ -171,6 +185,11 @@ def _health(ctx: _Ctx, out: dict[str, Metric]) -> None:
     _put(out, "net_debt_cr", None if debt is None else debt - (cash or 0.0), "INR_crore", ctx.latest,
          None if cash is not None else "cash not reported; net debt equals gross debt", total_debt=debt, cash=cash)  # fmt: skip
 
+    ebitda = ctx.v("operating_profit", ctx.latest)
+    net_debt = None if debt is None else debt - (cash or 0.0)
+    _put(out, "net_debt_to_ebitda", safe_div(net_debt, ebitda) if ebitda and ebitda > 0 else None, "x", ctx.latest,
+         None if ebitda and ebitda > 0 else "EBITDA missing or non-positive", net_debt=net_debt, ebitda=ebitda)  # fmt: skip
+
     ebit, interest = _ebit(ctx, ctx.latest), ctx.v("interest", ctx.latest)
     if interest == 0 and ebit is not None:
         _put(out, "interest_coverage", ICR_CAP, "x", ctx.latest, "no interest expense; capped", ebit=ebit, interest=0.0)
@@ -223,6 +242,49 @@ def _returns_on_equity(ctx: _Ctx, out: dict[str, Metric]) -> None:
          total_equity=ctx.v("total_equity", ctx.latest))  # fmt: skip
     last3 = [r for r in list(roes.values())[-3:] if r is not None]
     _put(out, "roe_avg_3y", statistics.fmean(last3) if last3 else None, "ratio", ctx.latest, years=len(last3))
+
+
+def _capital_allocation(ctx: _Ctx, sector_group: str, out: dict[str, Metric]) -> None:
+    """Return on incremental capital over the growth window: how much extra profit each extra rupee of capital
+    retained or raised has earned. A proxy for capital-allocation quality, computable from the statements."""
+    start, end, years = _window(ctx)
+    if not years:
+        _put(out, "return_on_incremental_capital", None, "ratio", None, "insufficient history")
+        return
+    if sector_group == FINANCIAL:
+        gain = _diff(ctx.v("net_profit", end), ctx.v("net_profit", start))
+        added = _diff(ctx.v("total_equity", end), ctx.v("total_equity", start))
+        basis = "change in net profit / change in equity"
+    else:
+        gain = _diff(_ebit(ctx, end), _ebit(ctx, start))
+        added = _diff(_capital_employed(ctx, end), _capital_employed(ctx, start))
+        basis = "change in EBIT / change in capital employed"
+    value = safe_div(gain, added) if added and added > 0 else None
+    _put(out, "return_on_incremental_capital", value, "ratio", f"{start}-{end}",
+         None if value is not None else "capital did not grow over the window, or inputs missing",
+         basis=basis, profit_change=gain, capital_change=added)  # fmt: skip
+
+
+def _diff(a: float | None, b: float | None) -> float | None:
+    return None if a is None or b is None else a - b
+
+
+# ---------------------------------------------------------------- ownership
+
+
+def _ownership(data: CompanyData, as_of: date, out: dict[str, Metric]) -> None:
+    holdings = [h for h in data.shareholding if h.period_end <= as_of]
+    if not holdings:
+        return
+    latest = holdings[-1]
+    period = latest.period_end.isoformat()
+    _put(out, "promoter_holding_pct", latest.promoter_holding_pct, "pct", period)
+    _put(out, "promoter_pledged_pct", latest.promoter_pledged_pct, "pct", period,
+         None if latest.promoter_pledged_pct is not None else "not reported")  # fmt: skip
+    year_ago = [h for h in holdings if h.period_end <= latest.period_end - timedelta(days=330)]
+    if year_ago and latest.promoter_holding_pct is not None and year_ago[-1].promoter_holding_pct is not None:
+        _put(out, "promoter_holding_change_1y", latest.promoter_holding_pct - year_ago[-1].promoter_holding_pct,
+             "pp", period, since=year_ago[-1].period_end.isoformat())  # fmt: skip
 
 
 # ---------------------------------------------------------------- quarterly momentum
@@ -305,11 +367,20 @@ def _liquidity(prices: PriceHistory, as_of: date, out: dict[str, Metric]) -> Non
 def historical_pe(fin: FinancialStatements, prices: PriceHistory) -> dict[str, float]:
     """P/E at each fiscal year end using the closing price on/before the date results would be public
     (~60 days after FY end), to avoid look-ahead."""
+    return _historical_multiple(fin, prices, "net_profit")
+
+
+def historical_pb(fin: FinancialStatements, prices: PriceHistory) -> dict[str, float]:
+    """P/B at each fiscal year end, same timing convention as historical_pe."""
+    return _historical_multiple(fin, prices, "total_equity")
+
+
+def _historical_multiple(fin: FinancialStatements, prices: PriceHistory, denominator: str) -> dict[str, float]:
     shares = fin.shares_outstanding_cr
     if not shares or not prices.bars:
         return {}
     out = {}
-    profits = fin.series("net_profit")
+    profits = fin.series(denominator)
     for period in fin.periods(PeriodType.FY):
         end = fin.period_end(period)
         known_at = end + timedelta(days=60)

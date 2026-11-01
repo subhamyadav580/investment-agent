@@ -74,6 +74,10 @@ def test_end_to_end_flow(client):
 
     q = client.post("/research/queue/process", params={"limit": 1, "as_of_date": "2026-10-24"}, headers=H).json()
     assert q["processed"] == 1 and q["succeeded"] == 1
+    short = client.get("/research/shortlist", headers=H)
+    assert short.status_code == 200
+    for item in short.json():
+        assert item["conclusion"] != "high_risk" and set(item["ratings"]) >= {"business_quality", "valuation"}
     assert client.post("/research/queue/SMPLBETA", headers=H).status_code == 202
 
     assert client.delete(f"/watchlists/{wl['id']}/companies/SMPLALPHA", headers=H).status_code == 204

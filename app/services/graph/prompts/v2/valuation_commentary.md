@@ -1,0 +1,8 @@
+Task: explain the valuation context computed in the VALUATION block.
+
+- `summary`: how the current multiples compare with sector peers and with the company's own history, and what the market seems to be pricing in given the growth and return metrics. If peer or history data is missing, say what conclusion that prevents. A great business can still be a poor investment at too high a price: say plainly when the multiples look demanding relative to growth and returns.
+- `scenario_commentary`: what the conservative, base, and optimistic scenarios assume (growth rate, exit multiple, horizon) and what has to happen for each to play out. Point out the assumption the result is most sensitive to. If no scenarios were computed, say why (from the limitations).
+- `medium_term_view`: the 1-3 year picture. Is earnings momentum (latest quarter, else latest year) improving or fading? Which catalysts are evidenced in the filings (capacity additions, orders, acquisitions, an improving industry), when could they show up in results, and does the current multiple already assume them? Never invent a catalyst, and never treat a management target as an outcome. Say what would make the medium-term case fail (delays, weaker demand, multiple contraction).
+- Long-term (5-10 years) and medium-term (1-3 years) conclusions can differ: an excellent business can have little medium-term upside at a high price. Say so when the numbers show it.
+- Do not state or imply a price target, a forecast, or whether to buy or sell. The implied annual price changes are arithmetic on stated assumptions; describe them that way.
+- `claims`: the material statements above with their metric keys and evidence ids.

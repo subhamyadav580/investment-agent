@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
@@ -41,6 +41,12 @@ class CandidateEvaluation(BaseModel):
     rule_results: list[RuleResult] = Field(default_factory=list)
     governance_flags: list[GovernanceFlag] = Field(default_factory=list)
     exclusion_reasons: list[str] = Field(default_factory=list)
+    # horizons: score = long_term (5-10y); medium_term (1-3y) has its own categories
+    horizon_scores: dict[str, float] = Field(default_factory=dict)
+    medium_term_scores: dict[str, float] = Field(default_factory=dict)
+    medium_term_missing: list[str] = Field(default_factory=list)
+    earnings_basis: str | None = None  # quarterly | annual
+    catalysts: list[dict[str, Any]] = Field(default_factory=list)
 
     @property
     def passed(self) -> list[RuleResult]:
@@ -57,6 +63,7 @@ class CandidateEvaluation(BaseModel):
 class ScreeningRunRequest(BaseModel):
     as_of_date: date | None = None
     enqueue_top_n: int | None = Field(default=None, ge=0, le=200)
+    horizon: Literal["long_term", "medium_term"] = "long_term"  # which score ranks candidates
 
 
 class ScreeningRunOut(BaseModel):

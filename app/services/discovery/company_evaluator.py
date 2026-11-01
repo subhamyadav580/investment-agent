@@ -8,7 +8,7 @@ from app.schemas.market_data import CompanyData, DataQualityReport
 from app.schemas.screening import CandidateEvaluation, GovernanceFlag, Metric, RuleResult
 from app.services.data.freshness import validate_company_data
 from app.services.discovery.rules_config import ScreeningConfig
-from app.services.discovery.scoring import evaluate_candidate
+from app.services.discovery.scoring import catalyst_signals, evaluate_candidate
 from app.services.discovery.screening_rules import derived_values, detect_governance_flags, evaluate_rules
 from app.services.research.metrics import compute_metrics, metrics_to_values
 
@@ -45,12 +45,14 @@ def prepare(data: CompanyData, sector: str | None, sector_group: str, as_of: dat
 
 
 def evaluate(
-    prepared: PreparedCompany, sector_medians: dict[str, float] | None, as_of: date, cfg: ScreeningConfig
-) -> EvaluatedCompany:
+    prepared: PreparedCompany, sector_medians: dict[str, float] | None, as_of: date, cfg: ScreeningConfig,
+    industry_improving: bool = False,
+) -> EvaluatedCompany:  # fmt: skip
     values = derived_values(prepared.values, sector_medians)
     flags = detect_governance_flags(prepared.data, as_of, cfg.governance)
     rules = evaluate_rules(values, prepared.data_quality, prepared.sector_group, flags, cfg)
+    catalysts = catalyst_signals(prepared.data.announcements, as_of, industry_improving, cfg.horizons.medium_term)
     evaluation = evaluate_candidate(
-        prepared.symbol, values, prepared.data_quality, prepared.sector_group, flags, rules, cfg
+        prepared.symbol, values, prepared.data_quality, prepared.sector_group, flags, rules, cfg, catalysts
     )
     return EvaluatedCompany(prepared, values, flags, rules, evaluation)

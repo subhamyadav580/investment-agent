@@ -4,11 +4,21 @@ from datetime import date
 
 from app.repos.screening_repo import ScreeningRepo
 from app.services.discovery.company_evaluator import PreparedCompany, evaluate
+from app.services.discovery.sector_trends import industry_of
 from app.services.graph.deps import GraphDeps
 from app.services.graph.state import ResearchState
 from app.services.research.evidence import build_evidence
 from app.services.research.metrics import compute_metrics
 from app.services.research.peer_comparison import compare_to_peers
+
+
+def _industry_trend(deps: GraphDeps, industry: str | None) -> dict | None:
+    """The industry's earnings trend from the latest universe screening run (source D), if it was computed."""
+    run = ScreeningRepo(deps.session).latest_completed_run()
+    if run is None or not industry:
+        return None
+    trend = (run.summary or {}).get("industry_trends", {}).get(industry)
+    return {"industry": industry, **trend, "screening_run_id": run.id, "as_of": run.as_of_date} if trend else None
 
 
 def _peer_values(deps: GraphDeps, sector: str | None) -> tuple[dict[str, dict], dict[str, float] | None]:
@@ -33,9 +43,13 @@ def make_calculate_metrics(deps: GraphDeps):
             state["symbol"], state.get("sector"), state["sector_group"], state["data"], state["data_quality"], metrics
         )
         peers, medians = _peer_values(deps, state.get("sector"))
-        evaluated = evaluate(prepared, medians, as_of, deps.cfg)
+        industry = industry_of(prepared)
+        trend = _industry_trend(deps, industry)
+        evaluated = evaluate(prepared, medians, as_of, deps.cfg, industry_improving=bool(trend and trend["improving"]))
         evidence, key_by_id = build_evidence(state["data"].all_sources())
         return {
+            "industry": industry,
+            "industry_trend": trend,
             "evaluated": evaluated,
             "metrics": {k: m.model_dump() for k, m in metrics.items()},
             "peer_comparison": {**compare_to_peers(state["symbol"], evaluated.values, peers), "sector_medians": medians},

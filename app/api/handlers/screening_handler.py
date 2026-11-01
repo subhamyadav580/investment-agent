@@ -29,7 +29,8 @@ def create_run(
     cfg: ScreeningConfig = Depends(get_screening_config),
 ) -> ScreeningRunOut:
     try:
-        run = run_screening(db, providers, cfg, body.as_of_date or date.today(), body.enqueue_top_n)
+        run = run_screening(db, providers, cfg, body.as_of_date or date.today(), body.enqueue_top_n,
+                           horizon=body.horizon)  # fmt: skip
     except ProviderError as e:
         raise HTTPException(status.HTTP_502_BAD_GATEWAY, f"data provider failed: {e}") from e
     return _run_out(run)

@@ -32,7 +32,7 @@ def test_missing_metric_never_passes(cfg):
         annual[y]["cfo"] = None
     ev = run(cfg, company_data(annual))
     assert rule(ev, "cash_conversion").status == "missing"
-    assert "financial_health.cfo_to_pat_3y" in ev.evaluation.missing_components
+    assert "financial_performance.cfo_to_pat_3y" in ev.evaluation.missing_components
 
 
 def test_hard_fail_rejects(cfg):
@@ -49,7 +49,7 @@ def test_serious_governance_is_not_averaged_away(cfg):
     data = company_data(announcements=[announcement("auditor_resignation", date(2026, 9, 1))])
     ev = run(cfg, data)
     assert ev.evaluation.status == "governance_review"
-    assert ev.evaluation.dimension_scores["governance_data_quality"] == 0.0
+    assert ev.evaluation.dimension_scores["management_governance"] == 0.0
 
 
 def test_old_governance_event_outside_lookback_ignored(cfg):
@@ -68,6 +68,13 @@ def test_pledge_thresholds(cfg):
         AS_OF, g,
     )  # fmt: skip
     assert [f.code for f in drop] == ["promoter_holding_drop"]
+
+
+def test_five_categories_use_sector_weights(cfg):
+    assert set(cfg.scoring.weights) == {"business_quality", "financial_performance", "financial_strength", "valuation",
+                                        "management_governance"}  # fmt: skip
+    assert cfg.scoring.weights_for("non_financial")["business_quality"] == 0.25
+    assert cfg.scoring.weights_for(FINANCIAL)["financial_strength"] == 0.25
 
 
 def test_bank_rules_are_sector_aware(cfg):

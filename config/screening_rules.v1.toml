@@ -2,7 +2,7 @@
 # Bump `version` on every change: it is stored with every screening run and research report so results are
 # reproducible.
 
-version = "2026.10.2"
+version = "2026.11.2"
 
 [universe]
 include_series = ["EQ", "BE", "BZ", "BL"]        # NSE main-board series
@@ -35,6 +35,15 @@ min_avg_traded_value_cr = 1.0     # 60-session average daily traded value, INR c
 max_pe_vs_sector_median = 1.5     # flag above this multiple of sector median P/E
 max_pe_absolute = 80.0
 max_pb_financial = 4.0
+# Conservative / base / optimistic scenarios. These are sensitivity checks with stated assumptions, not targets.
+scenario_years = 5
+scenario_growth_spread = 0.05     # conservative = base growth - 5 pp, optimistic = base + 5 pp
+scenario_min_growth = -0.10
+scenario_max_growth = 0.25        # no scenario assumes more than 25% a year
+scenario_margin_headroom = 0.05   # base profit growth capped at revenue growth + 5 pp
+sector_multiple_band = 0.20       # without own P/E history: sector median x 0.8 / 1.0 / 1.2
+attractive_base_return = 0.12     # base-case implied annual price change at or above -> "Attractive"
+expensive_base_return = 0.05      # below -> "Expensive"
 
 [governance]
 serious_flags = ["auditor_resignation", "auditor_qualification", "sebi_order", "insolvency"]
@@ -45,16 +54,64 @@ promoter_drop_warning_pp = 5.0    # promoter holding fall over the last year, pe
 lookback_days = 365
 
 [scoring.weights]
-business_quality = 0.30
-growth_consistency = 0.20
-financial_health = 0.20
+business_quality = 0.25           # competitive strength: sustained returns on capital, margin level and stability
+financial_performance = 0.25      # growth, consistency, ROCE, cash-flow quality
+financial_strength = 0.15         # debt, interest cover, net debt / EBITDA
+valuation = 0.20                  # P/E vs sector and absolute multiples
+management_governance = 0.15      # governance events, pledging, promoter trend, capital allocation
+
+[scoring.weights_financial]       # banks, NBFCs, insurers: balance-sheet quality is the business
+business_quality = 0.20
+financial_performance = 0.20
+financial_strength = 0.25         # capital adequacy and asset quality
 valuation = 0.20
-governance_data_quality = 0.10
+management_governance = 0.15
+
+# Investment horizons. Long-term (5-10 years) uses [scoring.weights] above. Medium-term (1-3 years) puts more
+# weight on the earnings outlook, valuation and evidenced catalysts.
+[horizons.long_term]
+min_years = 5
+max_years = 10
+default_years = 5
+
+[horizons.medium_term]
+min_years = 1
+max_years = 3
+default_years = 2
+catalyst_lookback_days = 180
+catalyst_categories = ["order_win", "capacity_expansion", "acquisition", "credit_rating_upgrade"]
+catalyst_points = 40.0            # per distinct kind of catalyst found in filings (never invented)
+industry_tailwind_points = 30.0   # the company's industry has improving earnings
+
+[horizons.medium_term.weights]
+business_financial_quality = 0.20
+earnings_outlook = 0.20           # latest-quarter (else latest-year) growth and acceleration
+financial_strength = 0.10
+valuation = 0.20
+catalysts = 0.15
+management_risk = 0.15
 
 [research]
 enqueue_top_n = 30
 min_score_for_research = 50.0
-worth_deeper_research_score = 65.0
+
+[assessment]
+# Category score -> rating: >= strong_score is Strong/Positive, < weak_score is Weak/Concerning.
+strong_score = 70.0
+weak_score = 45.0
+strong_candidate_min_score = 65.0
+data_quality_high = 80.0
+data_quality_medium = 60.0
+max_missing_components = 4
+# Red flags are reported on their own and make the classification "high risk" whatever the score.
+red_flag_max_debt_to_equity = 2.0
+red_flag_min_cfo_to_pat = 0.3
+red_flag_max_gross_npa_pct = 10.0
+# Discovery (Mode B): which classifications make the shortlist, and which are auto-added to a watchlist so
+# they are monitored.
+shortlist_classes = ["strong_candidate", "good_business_expensive", "potential_opportunity"]
+auto_watchlist = "Auto shortlist"
+auto_watchlist_classes = ["strong_candidate", "good_business_expensive"]
 
 [alerts]
 # Alert thresholds are screening rules, not trade instructions. Watchlist entries can override per company

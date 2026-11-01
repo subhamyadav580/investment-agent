@@ -4,7 +4,7 @@ from app.schemas.research import Claim
 from app.schemas.screening import Metric
 from app.services.research.evidence import build_evidence, verify_claims
 from app.services.research.peer_comparison import compare_to_peers, sector_medians
-from app.services.research.valuation import evaluate_valuation
+from app.services.research.valuation import assess_valuation, evaluate_valuation
 from tests.fixtures.builders import src
 
 METRICS = {
@@ -64,19 +64,46 @@ def test_sector_medians_require_min_peers():
     assert table["metrics"]["pe"]["peer_median"] == 25 and table["metrics"]["pe"]["percentile"] == 0
 
 
-def test_valuation_range_states_assumptions():
+GROWTH = {
+    "last_price": Metric(key="last_price", value=284.0, unit="INR"),
+    "profit_cagr": Metric(key="profit_cagr", value=0.30, unit="ratio", period="FY2021-FY2026"),
+    "revenue_cagr": Metric(key="revenue_cagr", value=0.12, unit="ratio", period="FY2021-FY2026"),
+}
+
+
+def test_scenarios_state_assumptions(cfg):
     hist = {"FY2023": 20.0, "FY2024": 25.0, "FY2025": 30.0, "FY2026": 22.0}
-    v = evaluate_valuation(METRICS, hist, {"pe": 25.0}, "non_financial", shares_outstanding_cr=10.0)
+    v = evaluate_valuation({**METRICS, **GROWTH}, hist, {"pe": 25.0}, "non_financial", 10.0, cfg.valuation)
     assert v["vs_sector"]["pe"] == pytest.approx(28.4 / 25)
     assert v["history"]["position"] == "above_history"
-    assert v["range"]["eps"] == 10.0 and v["range"]["low"] < v["range"]["mid"] < v["range"]["high"]
-    assert len(v["assumptions"]) >= 3
-    assert any("not a fair-value estimate" in x for x in v["limitations"])
+    sc = v["scenarios"]
+    assert sc["per_share"] == 10.0 and sc["years"] == cfg.valuation.scenario_years
+    # profit CAGR 30% is capped at revenue CAGR 12% + 5 pp headroom; conservative/optimistic = base -/+ 5 pp
+    assert [sc[k]["annual_growth"] for k in ("conservative", "base", "optimistic")] == pytest.approx([0.12, 0.17, 0.22])
+    assert sc["conservative"]["exit_multiple"] < sc["base"]["exit_multiple"] < sc["optimistic"]["exit_multiple"]
+    assert any("cap applied" in a for a in v["assumptions"]) and len(v["assumptions"]) >= 5
+    assert any("not forecasts" in x for x in v["limitations"])
+    rating, reasons = assess_valuation(v, METRICS, cfg.valuation)
+    assert rating in ("Attractive", "Fair", "Expensive") and any("Implied annual" in r for r in reasons)
 
 
-def test_valuation_without_history_has_no_range():
-    v = evaluate_valuation(METRICS, {"FY2026": 22.0}, None, "non_financial", 10.0)
-    assert v["range"] is None and len(v["limitations"]) == 2
+def test_scenarios_fall_back_to_sector_multiple(cfg):
+    v = evaluate_valuation({**METRICS, **GROWTH}, {"FY2026": 22.0}, {"pe": 25.0}, "non_financial", 10.0, cfg.valuation)
+    assert v["scenarios"]["base"]["exit_multiple"] == 25.0 and v["scenarios"]["conservative"]["exit_multiple"] == 20.0
+    assert any("sector median" in a for a in v["assumptions"])
+
+
+def test_no_history_no_peers_is_uncertain(cfg):
+    v = evaluate_valuation({**METRICS, **GROWTH}, {"FY2026": 22.0}, None, "non_financial", 10.0, cfg.valuation)
+    assert v["scenarios"] is None
+    assert assess_valuation(v, METRICS, cfg.valuation)[0] == "Uncertain"
+
+
+def test_expensive_when_price_outruns_growth(cfg):
+    pricey = {**METRICS, **GROWTH, "pe": Metric(key="pe", value=95.0, unit="x", inputs={"earnings": 100.0})}
+    v = evaluate_valuation(pricey, {}, {"pe": 25.0}, "non_financial", 10.0, cfg.valuation)
+    rating, reasons = assess_valuation(v, pricey, cfg.valuation)
+    assert rating == "Expensive" and any("ceiling" in r for r in reasons)
 
 
 def test_reference_numbers_such_as_thresholds_are_allowed():

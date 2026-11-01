@@ -12,12 +12,16 @@ from app.services.discovery.company_evaluator import EvaluatedCompany
 class ResearchState(TypedDict, total=False):
     query: str
     as_of_date: str
+    horizon: str  # long_term | medium_term | both (as requested)
+    horizon_years: dict[str, int]  # both horizons are always assessed
     company_id: int
     symbol: str
     company_name: str
     exchange: str
     sector: str | None
     sector_group: str
+    industry: str | None
+    industry_trend: dict[str, Any] | None
 
     data: CompanyData
     fetch_attempts: int

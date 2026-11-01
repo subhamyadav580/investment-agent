@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     http_min_interval_seconds: float = 2.0  # between requests to the same host
     screener_min_interval_seconds: float = 3.0
     screener_cache_hours: float = 72.0  # financials change quarterly; avoid re-downloading pages
-    include_bse_only: bool = True  # add companies listed only on BSE to the universe
+    include_bse_only: bool = False  # NSE first; set true to add BSE-only companies (merged by ISIN)
     price_sync_exchanges: list[str] = Field(default_factory=lambda: ["NSE"])  # NSE | BSE
     price_backfill_days: int = 400  # ~1y of sessions for liquidity, 1y return; use ~1100 for historical P/E
 
@@ -57,7 +57,7 @@ class Settings(BaseSettings):
     llm_model: str = "claude-opus-5-5"
     llm_effort: str = "medium"  # low | medium | high | xhigh | max
     llm_refusal_fallback: bool = True
-    prompt_version: str = "v1"
+    prompt_version: str = "v2"
 
     # --- Research queue ---
     research_batch_size: int = 5

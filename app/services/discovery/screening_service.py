@@ -34,9 +34,11 @@ def run_screening(
     enqueue_top_n: int | None = None,
     symbols: list[str] | None = None,
     limit: int | None = None,
+    horizon: str = "long_term",
 ) -> ScreeningRun:
     """`symbols` restricts the run to those companies; `limit` caps how many in-scope companies are fetched
-    (most liquid first when prices are synced). Both are for partial/test runs."""
+    (most liquid first when prices are synced). Both are for partial/test runs. `horizon` (long_term |
+    medium_term) chooses which score ranks the candidates and orders the research queue."""
     repo = ScreeningRepo(session)
     universe = load_universe(session, providers.universe, cfg.universe)
     run = repo.create_run(as_of.isoformat(), universe.version, cfg.version)
@@ -44,7 +46,7 @@ def run_screening(
     session.commit()  # the run record must exist even if processing fails later
 
     try:
-        _process(session, providers, cfg, as_of, run, universe, enqueue_top_n, symbols, limit)
+        _process(session, providers, cfg, as_of, run, universe, enqueue_top_n, symbols, limit, horizon)
     except Exception as e:
         session.rollback()
         run = repo.get_run(run.id)
@@ -82,7 +84,8 @@ def _liquidity_prefilter(providers: Providers, members: list[UniverseMember], cf
     return keep, rejected
 
 
-def _process(session, providers, cfg, as_of, run, universe, enqueue_top_n, symbols=None, limit=None) -> None:
+def _process(session, providers, cfg, as_of, run, universe, enqueue_top_n, symbols=None, limit=None,
+             horizon="long_term") -> None:  # fmt: skip
     repo = ScreeningRepo(session)
     statuses: Counter[str] = Counter()
 
@@ -122,14 +125,15 @@ def _process(session, providers, cfg, as_of, run, universe, enqueue_top_n, symbo
     improving = {ind for ind, t in trends.items() if t["improving"]}
 
     # Pass 3: rules + scoring.
-    evaluated: dict[int, EvaluatedCompany] = {
-        cid: evaluate(p, medians.get(p.sector or ""), as_of, cfg) for cid, p in prepared.items()
-    }
     tailwind = {cid: industry_of(p) in improving for cid, p in prepared.items()}
+    evaluated: dict[int, EvaluatedCompany] = {
+        cid: evaluate(p, medians.get(p.sector or ""), as_of, cfg, tailwind[cid]) for cid, p in prepared.items()
+    }
     ranked = sorted(
-        ((cid, e.evaluation.score) for cid, e in evaluated.items() if e.evaluation.status == "candidate"),
+        ((cid, e.evaluation.horizon_scores.get(horizon, e.evaluation.score)) for cid, e in evaluated.items()
+         if e.evaluation.status == "candidate"),
         key=lambda x: -x[1],
-    )
+    )  # fmt: skip
     rank_of = {cid: i for i, (cid, _) in enumerate(ranked, 1)}
 
     for cid, e in evaluated.items():
@@ -143,7 +147,8 @@ def _process(session, providers, cfg, as_of, run, universe, enqueue_top_n, symbo
                 score=ev.score,
                 rank=rank_of.get(cid),
                 dimension_scores={**ev.dimension_scores, "missing_components": ev.missing_components,
-                                  "industry": industry_of(e.prepared), "industry_improving": tailwind[cid]},  # fmt: skip
+                                  "industry": industry_of(e.prepared), "industry_improving": tailwind[cid],
+                                  "horizon_scores": ev.horizon_scores, "medium_term": ev.medium_term_scores},  # fmt: skip
                 passed_rules=[r.model_dump() for r in ev.passed],
                 failed_rules=[r.model_dump() for r in ev.failed],
                 exclusion_reasons=ev.exclusion_reasons,
@@ -167,6 +172,7 @@ def _process(session, providers, cfg, as_of, run, universe, enqueue_top_n, symbo
         "fetched": len(in_scope),
         "liquidity_prefiltered": len(prefiltered),
         "enqueued_for_research": len(enqueued),
+        "ranked_by": horizon,
         "sector_medians": medians,
         "industry_trends": trends,
     }

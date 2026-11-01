@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models import Company, ResearchReport
@@ -32,3 +32,9 @@ class ReportRepo:
             .order_by(ResearchReport.id.desc())
             .limit(1)
         )
+
+    def latest_per_company(self) -> list[tuple[ResearchReport, Company]]:
+        """Each company's most recent report."""
+        latest = select(func.max(ResearchReport.id)).group_by(ResearchReport.company_id).scalar_subquery()
+        q = select(ResearchReport, Company).join(Company).where(ResearchReport.id.in_(latest))
+        return [(r, c) for r, c in self.s.execute(q).all()]

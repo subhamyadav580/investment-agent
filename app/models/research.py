@@ -13,7 +13,7 @@ class ResearchReport(Base):
     company_id: Mapped[int] = mapped_column(ForeignKey("companies.id", ondelete="CASCADE"), index=True)
     as_of_date: Mapped[date] = mapped_column(Date)
     status: Mapped[str] = mapped_column(String(16))  # complete | partial | insufficient_data
-    conclusion: Mapped[str] = mapped_column(String(32))  # worth_deeper_research | watch | insufficient_evidence
+    conclusion: Mapped[str] = mapped_column(String(32))  # a Classification (schemas/research.py)
     report_json: Mapped[dict] = mapped_column(JsonType)
     metrics_json: Mapped[dict] = mapped_column(JsonType, default=dict)
     model_version: Mapped[str | None] = mapped_column(String(64))

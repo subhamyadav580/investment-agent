@@ -43,10 +43,10 @@ def test_request_shape_and_parsed_output():
     def handler(request: httpx.Request) -> httpx.Response:
         seen["path"] = request.url.path
         seen["body"] = json.loads(request.content)
-        return httpx.Response(200, json=response(text({"summary": "fine", "claims": []})))
+        return httpx.Response(200, json=response(text({"summary": "fine", "scenario_commentary": "n/a", "medium_term_view": "n/a", "claims": []})))
 
     res = make_llm(handler).structured(task="t", system="sys", user="ctx", output_model=ValuationCommentary)
-    assert res.output == ValuationCommentary(summary="fine", claims=[])
+    assert res.output == ValuationCommentary(summary="fine", scenario_commentary="n/a", medium_term_view="n/a", claims=[])
     assert res.meta["input_tokens"] == 900 and res.meta["cached_input_tokens"] == 512 and "error" not in res.meta
     body = seen["body"]
     assert seen["path"].endswith("/responses")
@@ -63,7 +63,7 @@ def test_nested_models_produce_strict_schema():
 
     def handler(request):
         seen["schema"] = json.loads(request.content)["text"]["format"]["schema"]
-        return httpx.Response(200, json=response(text({"risks": [], "downside_scenarios": [], "catalysts": [],
+        return httpx.Response(200, json=response(text({"management_assessment": "", "risks": [], "downside_scenarios": [], "catalysts": [],
                                                         "monitor_next": [], "invalidation_conditions": []})))  # fmt: skip
 
     res = make_llm(handler).structured(task="t", system="s", user="u", output_model=RiskAnalysis)

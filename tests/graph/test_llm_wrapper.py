@@ -30,10 +30,10 @@ def test_request_shape_and_parsed_output():
     def handler(request: httpx.Request) -> httpx.Response:
         seen["body"] = json.loads(request.content)
         seen["beta"] = request.headers.get("anthropic-beta", "")
-        return httpx.Response(200, json=message(json.dumps({"summary": "fine", "claims": []})))
+        return httpx.Response(200, json=message(json.dumps({"summary": "fine", "scenario_commentary": "n/a", "medium_term_view": "n/a", "claims": []})))
 
     res = make_llm(handler).structured(task="t", system="sys", user="ctx", output_model=ValuationCommentary)
-    assert res.output == ValuationCommentary(summary="fine", claims=[])
+    assert res.output == ValuationCommentary(summary="fine", scenario_commentary="n/a", medium_term_view="n/a", claims=[])
     assert res.meta["input_tokens"] == 1200 and "error" not in res.meta
     body = seen["body"]
     assert body["model"] == "claude-opus-5-5"

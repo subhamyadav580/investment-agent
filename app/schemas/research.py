@@ -14,20 +14,28 @@ class Claim(BaseModel):
 
 
 class BusinessAnalysis(BaseModel):
-    business_overview: str
+    business_overview: str = Field(description="What the company does.")
+    revenue_model: str = Field(description="How it makes money: segments, customers, pricing, as far as the context shows.")
+    competitive_advantages: list[str] = Field(description="Advantages the evidence supports; empty if none are visible.")
     competitive_position: str
     financial_trends: str
+    industry_outlook: str = Field(description="Industry direction as shown by the INDUSTRY TREND block and filings.")
+    growth_drivers: list[str] = Field(description="Expansion plans and drivers visible in filings or metrics.")
+    competitive_threats: list[str]
     claims: list[Claim]
     open_questions: list[str]
 
 
 class ValuationCommentary(BaseModel):
     summary: str
+    scenario_commentary: str = Field(description="What the conservative/base/optimistic assumptions mean in practice.")
+    medium_term_view: str = Field(description="1-3 year view: earnings momentum, evidenced catalysts and their timing, "
+                                  "and whether they already look priced in.")
     claims: list[Claim]
 
 
 class RiskItem(BaseModel):
-    category: Literal["financial", "governance", "regulatory", "business", "valuation", "data_quality"]
+    category: Literal["financial", "governance", "regulatory", "business", "competition", "valuation", "data_quality"]
     description: str
     severity: Literal["low", "medium", "high"]
     evidence_ids: list[str]
@@ -35,6 +43,7 @@ class RiskItem(BaseModel):
 
 
 class RiskAnalysis(BaseModel):
+    management_assessment: str = Field(description="Promoter holding and pledging, governance events, capital allocation.")
     risks: list[RiskItem]
     downside_scenarios: list[str]
     catalysts: list[str]
@@ -44,7 +53,9 @@ class RiskAnalysis(BaseModel):
 
 # ---- Persisted report ----
 
-Conclusion = Literal["worth_deeper_research", "watch", "insufficient_evidence"]
+Classification = Literal[
+    "strong_candidate", "good_business_expensive", "potential_opportunity", "high_risk", "insufficient_evidence"
+]
 
 
 class EvidenceItem(BaseModel):
@@ -69,57 +80,80 @@ class VerifiedClaim(BaseModel):
 
 
 class ResearchReportDoc(BaseModel):
-    """The structured report. Section numbering follows the plan's report format (7.3)."""
+    """The structured report. Sections 1-7 follow the report format in the README; each final-assessment rating
+    carries its reasons, metric keys and evidence ids."""
 
-    # 1. identity
     symbol: str
     name: str
     exchange: str
     sector: str | None
+    industry: str | None = None
     as_of_date: date
-    # 2. summary
     research_status: Literal["complete", "partial", "insufficient_data"]
     executive_summary: str
     screening_score: float | None
     dimension_scores: dict[str, float]
-    # 3-4
-    business_overview: str | None
-    competitive_position: str | None
+    score_weights: dict[str, float]
+    horizon: dict[str, Any]  # requested, primary, years per horizon
+    # 1. Company overview
+    company_overview: dict[str, Any]
+    # 2. Financial performance (5-10 years where available, peers)
     financial_performance: dict[str, Any]
-    financial_commentary: str | None
-    # 5-6
-    valuation: dict[str, Any]
-    valuation_commentary: str | None
     peer_comparison: dict[str, Any]
-    # 7-8
-    risks: list[dict[str, Any]]
-    downside_scenarios: list[str]
-    governance: dict[str, Any]
-    # 9
+    # 3. Valuation (current, history, peers, scenarios)
+    valuation: dict[str, Any]
+    # 4. Management and governance
+    management_governance: dict[str, Any]
+    # 5. Growth prospects
+    growth_prospects: dict[str, Any]
+    # 6. Risks (red flags listed separately; invalidation conditions = when the thesis no longer holds)
+    risks: dict[str, Any]
+    # 7. Final assessment
+    final_assessment: dict[str, Any]
+    conclusion: Classification
+    conclusion_label: str
+    conclusion_rationale: list[str]
+    # Monitoring and evidence trail
     monitor_next: list[str]
     catalysts: list[str]
-    # 10
+    open_questions: list[str]
     evidence: list[EvidenceItem]
     claims: list[VerifiedClaim]
     data_quality_limitations: list[str]
-    # 11
-    invalidation_conditions: list[str]
-    # 12
-    conclusion: Conclusion
-    conclusion_rationale: list[str]
-    open_questions: list[str]
     disclaimer: str = (
-        "Research aid only. Not investment advice, not a buy/sell recommendation, and no guarantee of returns. "
-        "Verify material facts against original filings before acting."
+        "Research assessment only: not investment advice, not a buy/sell recommendation, and no guarantee of "
+        "future returns. You make the final decision; verify material facts against the original filings first."
     )
+
+
+class ShortlistItemOut(BaseModel):
+    rank: int
+    report_id: int
+    symbol: str
+    name: str
+    sector: str | None
+    as_of_date: date
+    conclusion: str
+    conclusion_label: str
+    score: float | None
+    ratings: dict[str, str]
+    red_flags: int
+    main_concern: str | None
+    long_term: str | None  # classification label per horizon
+    medium_term: str | None
+    why: list[str]
+    created_at: datetime
 
 
 # ---- API DTOs ----
 
 
 class ResearchRequest(BaseModel):
-    query: str = Field(min_length=1, max_length=120, description="Company name or NSE symbol")
+    query: str = Field(min_length=1, max_length=160,
+                       description="Company name or NSE symbol, optionally with a horizon: 'Asian Paints for 5 years'")
     as_of_date: date | None = None
+    horizon: Literal["long_term", "medium_term", "both"] | None = None  # overrides a horizon in the query text
+    years: int | None = Field(default=None, ge=1, le=10)
 
 
 class ResearchReportOut(BaseModel):
@@ -149,3 +183,4 @@ class QueueProcessOut(BaseModel):
     succeeded: int
     failed: int
     report_ids: list[int]
+    newly_monitored: list[str] = Field(default_factory=list)  # symbols auto-added to the shortlist watchlist

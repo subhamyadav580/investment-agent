@@ -11,22 +11,33 @@ from app.schemas.screening import Metric
 from app.services.alerts.alert_service import evaluate_watchlist_entry
 from app.services.graph.deps import GraphDeps
 from app.services.graph.state import ResearchState
+from app.services.research.assessment import LABELS, AssessmentInputs, build_assessment
 from app.services.research.evidence import numeric_leaves, verify_claims, verify_risks
 
 ANNUAL_TABLE_METRICS = ("revenue", "operating_profit", "net_profit", "cfo", "total_debt", "total_equity",
                         "net_interest_income", "gross_npa_pct")  # fmt: skip
 HEADLINE_METRICS = (
-    "revenue_cagr", "profit_cagr", "operating_margin_latest", "operating_margin_avg", "net_margin_latest",
-    "roce_latest", "roce_avg_3y", "roe_latest", "roa_latest", "debt_to_equity", "interest_coverage",
-    "cfo_to_pat_3y", "receivable_days_latest", "gross_npa_pct", "capital_adequacy_ratio", "profit_positive_ratio",
+    "history_years", "revenue_cagr", "profit_cagr", "revenue_cagr_long", "profit_cagr_long", "revenue_growth_latest",
+    "profit_growth_latest", "operating_margin_latest", "operating_margin_avg", "net_margin_latest", "roce_latest",
+    "roce_avg_3y", "roe_latest", "roe_avg_3y", "roa_latest", "debt_to_equity", "net_debt_to_ebitda",
+    "interest_coverage", "cfo_to_pat_3y", "receivable_days_latest", "gross_npa_pct", "net_npa_pct",
+    "capital_adequacy_ratio", "profit_positive_ratio",
 )  # fmt: skip
+MOMENTUM_METRICS = ("revenue_growth_q_yoy", "profit_growth_q_yoy", "profit_growth_q_yoy_prev", "revenue_growth_latest",
+                    "profit_growth_latest")  # fmt: skip
+OWNERSHIP_METRICS = ("promoter_holding_pct", "promoter_pledged_pct", "promoter_holding_change_1y")
+GROWTH_CATEGORIES = ("order_win", "acquisition", "capacity_expansion", "credit_rating_upgrade")
+NOT_COVERED = [
+    "Related-party transactions are not in the structured data; read the related-party note in the annual report.",
+    "Management quality beyond what filings and numbers show (track record, succession) needs your own reading.",
+]
 
 
 def make_verify_evidence(deps: GraphDeps):
     def verify_evidence(state: ResearchState) -> dict:
         metrics = {k: Metric(**m) for k, m in state["metrics"].items()}
         known = {e["id"] for e in state["evidence"]}
-        refs = numeric_leaves([state.get("valuation"), state.get("peer_comparison"),
+        refs = numeric_leaves([state.get("valuation"), state.get("peer_comparison"), state.get("industry_trend"),
                                [r.threshold for r in state["evaluated"].rules]])  # fmt: skip
         claims: list[VerifiedClaim] = []
         if b := state.get("business"):
@@ -53,35 +64,47 @@ def _default_invalidation(state: ResearchState, deps: GraphDeps) -> list[str]:
     ]
 
 
-def _conclusion(state: ResearchState, deps: GraphDeps, unverified_material: int) -> tuple[str, list[str]]:
-    dq = state["data_quality"]
-    ev = state["evaluated"].evaluation
-    if not dq.is_eligible:
-        return "insufficient_evidence", [f"Data failed validation: {i.message}" for i in dq.errors]
-    rationale = [f"Research-priority score {ev.score}/100 under rules {deps.cfg.version}."]
-    if ev.status == "governance_review":
-        return "watch", rationale + ["Serious governance flags need separate human review first:"] + ev.exclusion_reasons
-    if ev.status == "rejected":
-        return "watch", rationale + ["Failed a hard screening rule:"] + ev.exclusion_reasons
-    warnings = [f for f in state["evaluated"].flags if f.severity == "warning"]
-    if warnings:
-        rationale.append("Governance warnings to investigate: " + "; ".join(f.message for f in warnings))
-    if unverified_material:
-        rationale.append(f"{unverified_material} material analytical claim(s) could not be verified.")
-    if ev.score is not None and ev.score >= deps.cfg.research.worth_deeper_research_score and not unverified_material:
-        return "worth_deeper_research", rationale + ["Passes all hard rules and scores above the research threshold."]
-    return "watch", rationale + ["Below the deeper-research threshold or has unresolved verification gaps."]
+def _assessment(state: ResearchState, deps: GraphDeps, unverified_material: int) -> dict:
+    ev = state["evaluated"]
+    data = ev.prepared.data
+    inputs = AssessmentInputs(
+        sector_group=state["sector_group"], metrics=ev.prepared.metrics, values=ev.values,
+        dimension_scores=ev.evaluation.dimension_scores, missing_components=ev.evaluation.missing_components,
+        score=ev.evaluation.score, flags=ev.flags, rules=ev.rules, data_quality=state["data_quality"],
+        valuation=state.get("valuation") or {}, unverified_material=unverified_material,
+        financial_source_keys=list(data.financials.sources) if data.financials else [],
+        price_source_keys=[data.prices.source.key] if data.prices and data.prices.source else [],
+        shareholding_source_keys=[h.source.key for h in data.shareholding],
+        narrative_available=state.get("business") is not None,
+        horizon_scores=ev.evaluation.horizon_scores, medium_term_scores=ev.evaluation.medium_term_scores,
+        medium_term_missing=ev.evaluation.medium_term_missing, earnings_basis=ev.evaluation.earnings_basis,
+        catalysts=ev.evaluation.catalysts, primary_horizon=_primary(state),
+        horizon_years=state.get("horizon_years") or {"long_term": 5, "medium_term": 2},
+    )  # fmt: skip
+    evidence_id_for = {key: eid for eid, key in state["evidence_key_by_id"].items()}
+    return build_assessment(inputs, deps.cfg, evidence_id_for)
+
+
+def _primary(state: ResearchState) -> str:
+    return "medium_term" if state.get("horizon") == "medium_term" else "long_term"
+
+
+def _pick(state: ResearchState, keys: tuple[str, ...]) -> dict:
+    return {k: state["metrics"][k] for k in keys if k in state["metrics"]}
 
 
 def make_generate_report(deps: GraphDeps):
     def generate_report(state: ResearchState) -> dict:
         ev = state["evaluated"]
         dq = state["data_quality"]
+        data = ev.prepared.data
         evaluation = ev.evaluation
         business, valuation_c, risks = state.get("business"), state.get("valuation_commentary"), state.get("risk_analysis")
         claims = [VerifiedClaim(**c) for c in state.get("verified_claims", [])]
         unverified_material = sum(1 for c in claims if not c.verified and c.materiality == "material")
-        conclusion, rationale = _conclusion(state, deps, unverified_material)
+        assessment = _assessment(state, deps, unverified_material)
+        overall = assessment["overall"]
+        conclusion = overall["classification"]
 
         llm_failures = [f"{c['task']}: {c['error']}" for c in state.get("llm_calls", []) if c.get("error")]
         limitations = [f"{i.severity}: {i.message}" for i in dq.issues if i.severity in ("error", "warning", "info")]
@@ -98,56 +121,94 @@ def make_generate_report(deps: GraphDeps):
         else:
             status = "complete"
 
-        fin = ev.prepared.data.financials
+        fin = data.financials
         annual = {}
         if fin:
             annual = {m: fin.series(m) for m in ANNUAL_TABLE_METRICS if any(v.metric == m for v in fin.values)}
-        dims = evaluation.dimension_scores
-        ranked_dims = sorted(dims.items(), key=lambda kv: -kv[1])
+        as_of = date.fromisoformat(state["as_of_date"])
+        upcoming = [f"{a.title} on {a.event_date}" for a in data.announcements if a.event_date and a.event_date >= as_of]
+        key_to_id = {key: eid for eid, key in state["evidence_key_by_id"].items()}
+        growth_filings = [{"date": a.published_at.date().isoformat(), "category": a.category, "title": a.title,
+                           "evidence_id": key_to_id.get(a.source.key)}
+                          for a in data.announcements if a.category in GROWTH_CATEGORIES]  # fmt: skip
+        ratings = {k: assessment[k]["rating"] for k in ("business_quality", "financial_health",
+                                                         "management_governance", "valuation", "data_quality")}  # fmt: skip
+        hz = assessment["horizons"]
+        horizon_line = " ".join(f"{h['horizon_label']} ({h['years']}y): {h['label']}." for h in hz.values())
         summary = (
-            f"{state['company_name']} ({state['symbol']}): research-priority score "
-            f"{evaluation.score if evaluation.score is not None else 'n/a'}/100, screening status "
-            f"'{evaluation.status}'. "
-            + (f"Strongest dimension: {ranked_dims[0][0]} ({ranked_dims[0][1]}); weakest: {ranked_dims[-1][0]} "
-               f"({ranked_dims[-1][1]}). " if ranked_dims else "")
-            + f"{len(ev.flags)} governance flag(s). Data quality {dq.score}/100 over {dq.years_available} year(s). "
-            f"Conclusion: {conclusion.replace('_', ' ')}."
+            f"{state['company_name']} ({state['symbol']}): {horizon_line} "
+            f"Business quality {ratings['business_quality']}, financial health {ratings['financial_health']}, "
+            f"management and governance {ratings['management_governance']}, valuation {ratings['valuation']}, "
+            f"data quality {ratings['data_quality']}. Scores: "
+            + ", ".join(f"{h['horizon_label'].lower()} {h['score'] if h['score'] is not None else 'n/a'}/100"
+                        for h in hz.values())
+            + f" under rules {deps.cfg.version}; {len(assessment['red_flags'])} red flag(s)."
         )  # fmt: skip
-        upcoming = [f"{a.title} on {a.event_date}" for a in ev.prepared.data.announcements
-                    if a.event_date and a.event_date >= date.fromisoformat(state["as_of_date"])]  # fmt: skip
+        trend = state.get("industry_trend")
 
         doc = ResearchReportDoc(
             symbol=state["symbol"], name=state["company_name"], exchange=state["exchange"], sector=state.get("sector"),
-            as_of_date=date.fromisoformat(state["as_of_date"]), research_status=status, executive_summary=summary,
-            screening_score=evaluation.score, dimension_scores=dims,
-            business_overview=business.business_overview if business else None,
-            competitive_position=business.competitive_position if business else None,
+            industry=state.get("industry"), as_of_date=as_of, research_status=status, executive_summary=summary,
+            screening_score=evaluation.score, dimension_scores=evaluation.dimension_scores,
+            score_weights=deps.cfg.scoring.weights_for(state["sector_group"]),
+            horizon={"requested": state.get("horizon") or "long_term", "primary": overall["horizon"],
+                     "years": state.get("horizon_years") or {}, "medium_term_weights": deps.cfg.horizons.medium_term.weights},
+            company_overview={
+                "what_it_does": business.business_overview if business else None,
+                "revenue_model": business.revenue_model if business else None,
+                "competitive_advantages": business.competitive_advantages if business else [],
+                "competitive_position": business.competitive_position if business else None,
+            },
             financial_performance={
-                "headline_metrics": {k: state["metrics"][k] for k in HEADLINE_METRICS if k in state["metrics"]},
+                "years_covered": dq.years_available,
+                "headline_metrics": _pick(state, HEADLINE_METRICS),
                 "annual_inr_crore": annual,
+                "commentary": business.financial_trends if business else None,
                 "rules": [r.model_dump() for r in ev.rules],
                 "missing_score_components": evaluation.missing_components,
             },
-            financial_commentary=business.financial_trends if business else None,
-            valuation=state.get("valuation") or {},
-            valuation_commentary=valuation_c.summary if valuation_c else None,
             peer_comparison=state.get("peer_comparison") or {},
-            risks=[r.model_dump() for r in risks.risks] if risks else [],
-            downside_scenarios=risks.downside_scenarios if risks else [],
-            governance={
+            valuation={
+                **(state.get("valuation") or {}),
+                "commentary": valuation_c.summary if valuation_c else None,
+                "scenario_commentary": valuation_c.scenario_commentary if valuation_c else None,
+                "medium_term_view": valuation_c.medium_term_view if valuation_c else None,
+            },
+            management_governance={
+                "promoter": _pick(state, OWNERSHIP_METRICS),
+                "shareholding_history": [h.model_dump(mode="json", exclude={"source"}) for h in data.shareholding[-8:]],
                 "flags": [f.model_dump() for f in ev.flags],
-                "latest_shareholding": ev.prepared.data.shareholding[-1].model_dump(mode="json", exclude={"source"})
-                if ev.prepared.data.shareholding else None,
-            },  # fmt: skip
+                "capital_allocation": _pick(state, ("return_on_incremental_capital", "cfo_to_pat_3y", "debt_to_equity")),
+                "commentary": risks.management_assessment if risks else None,
+                "not_covered": NOT_COVERED,
+            },
+            growth_prospects={
+                "industry_outlook": business.industry_outlook if business else None,
+                "industry_trend": trend,
+                "recent_momentum": _pick(state, MOMENTUM_METRICS),
+                "earnings_outlook": hz.get("medium_term", {}).get("earnings_outlook"),
+                "catalysts": hz.get("medium_term", {}).get("catalysts"),
+                "growth_drivers": business.growth_drivers if business else [],
+                "growth_filings": growth_filings,
+                "competitive_threats": business.competitive_threats if business else [],
+            },
+            risks={
+                "red_flags": assessment["red_flags"],
+                "items": [r.model_dump() for r in risks.risks] if risks else [],
+                "downside_scenarios": risks.downside_scenarios if risks else [],
+                "invalidation_conditions": (risks.invalidation_conditions if risks else [])
+                + _default_invalidation(state, deps),
+            },
+            final_assessment={k: v for k, v in assessment.items() if k != "red_flags"},
+            conclusion=conclusion,
+            conclusion_label=LABELS[conclusion],
+            conclusion_rationale=overall["reasons"],
             monitor_next=(risks.monitor_next if risks else []) + upcoming,
             catalysts=risks.catalysts if risks else [],
+            open_questions=business.open_questions if business else [],
             evidence=state["evidence"],
             claims=claims,
             data_quality_limitations=limitations,
-            invalidation_conditions=(risks.invalidation_conditions if risks else []) + _default_invalidation(state, deps),
-            conclusion=conclusion,
-            conclusion_rationale=rationale,
-            open_questions=business.open_questions if business else [],
         )  # fmt: skip
         return {"report": doc.model_dump(mode="json")}
 

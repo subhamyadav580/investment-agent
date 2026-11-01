@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Literal
 
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -8,7 +9,13 @@ from app.dependencies import get_data_providers, get_db, get_llm, get_notifier, 
 from app.models import Company, ResearchReport
 from app.repos.company_repo import CompanyRepo
 from app.repos.report_repo import ReportRepo
-from app.schemas.research import QueueProcessOut, ResearchReportOut, ResearchReportSummaryOut, ResearchRequest
+from app.schemas.research import (
+    QueueProcessOut,
+    ResearchReportOut,
+    ResearchReportSummaryOut,
+    ResearchRequest,
+    ShortlistItemOut,
+)
 from app.services.alerts.notifier import Notifier
 from app.services.data.normalization import normalize_symbol
 from app.services.data.providers.registry import Providers
@@ -17,6 +24,7 @@ from app.services.discovery.rules_config import ScreeningConfig
 from app.services.graph.deps import GraphDeps
 from app.services.graph.llm import StructuredLLM
 from app.services.research.research_service import ResearchError, ResearchService
+from app.services.research.shortlist import shortlist
 
 
 def _service(db, providers, cfg, llm, notifier, settings: Settings) -> ResearchService:
@@ -46,7 +54,7 @@ def run_research(
 ) -> ResearchReportOut:
     service = _service(db, providers, cfg, llm, notifier, settings)
     try:
-        outcome = service.research(body.query, body.as_of_date or date.today())
+        outcome = service.research(body.query, body.as_of_date or date.today(), body.horizon, body.years)
     except ResearchError as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e)) from e
     return _report_out(*ReportRepo(db).get(outcome.report_id))
@@ -90,3 +98,10 @@ def get_report(report_id: int, db: Session = Depends(get_db)) -> ResearchReportO
     if row is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"report {report_id} not found")
     return _report_out(*row)
+
+
+def get_shortlist(
+    horizon: Literal["long_term", "medium_term"] = "long_term", limit: int = 50, db: Session = Depends(get_db),
+    cfg: ScreeningConfig = Depends(get_screening_config),
+) -> list[ShortlistItemOut]:  # fmt: skip
+    return shortlist(db, cfg, limit, horizon)
