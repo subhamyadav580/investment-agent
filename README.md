@@ -49,6 +49,12 @@ uv run uvicorn app.main:app --reload
 uv run python -m app.jobs.worker
 ```
 
+Then open http://localhost:8000/ui/ (or just http://localhost:8000/) and paste your `API_KEY` on the Settings
+page. The web UI covers research (with horizon), full reports (sections 1-7, final assessment, evidence), the
+ranked shortlist per horizon, discovery (screening runs and the research queue), watchlists and alerts. It is
+plain HTML/JS in `app/web/static/` served by FastAPI: no Node toolchain or build step. The key is kept in the
+browser's local storage and sent as `X-API-Key`; the static files themselves contain no data.
+
 Or run everything in containers: `docker compose up --build` (db, migrations, api, worker).
 
 The synthetic prices end on 2026-10-23. Running with a later `--as-of` correctly flags them as stale.
@@ -213,7 +219,7 @@ market) still work offline.
 ## API
 
 Every endpoint except `GET /health` requires an `X-API-Key` header matching `API_KEY`. If `API_KEY` is not
-set, the API refuses requests instead of running open. Interactive docs are at `/docs`.
+set, the API refuses requests instead of running open. Interactive docs are at `/docs`; the web UI is at `/ui/`.
 
 | Method | Path | Purpose |
 |---|---|---|

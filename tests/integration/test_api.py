@@ -82,3 +82,11 @@ def test_end_to_end_flow(client):
 
     assert client.delete(f"/watchlists/{wl['id']}/companies/SMPLALPHA", headers=H).status_code == 204
     assert client.delete(f"/watchlists/{wl['id']}/companies/SMPLALPHA", headers=H).status_code == 404
+
+
+def test_ui_is_served_without_key_and_root_redirects(client):
+    page = client.get("/ui/")
+    assert page.status_code == 200 and "Investment Agent" in page.text
+    assert client.get("/ui/app.js").status_code == 200
+    root = client.get("/", follow_redirects=False)
+    assert root.status_code == 307 and root.headers["location"] == "/ui/"

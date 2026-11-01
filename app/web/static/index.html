@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Investment Agent</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 14l4-5 3 3 7-9' fill='none' stroke='%232457c5' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/research">Investment Agent</a>
+    <nav id="nav">
+      <a href="#/research" data-tab="research">Research</a>
+      <a href="#/shortlist" data-tab="shortlist">Shortlist</a>
+      <a href="#/discovery" data-tab="discovery">Discovery</a>
+      <a href="#/watchlists" data-tab="watchlists">Watchlists</a>
+      <a href="#/alerts" data-tab="alerts">Alerts</a>
+      <a href="#/settings" data-tab="settings">Settings</a>
+    </nav>
+  </header>
+  <main id="view" aria-live="polite"></main>
+  <footer class="foot">Research assessments only: not investment advice, not a buy/sell recommendation.</footer>
+  <div id="toast" role="status" hidden></div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

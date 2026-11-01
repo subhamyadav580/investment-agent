@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from app.core.config import get_settings
 from app.core.logging import configure_logging
-from app.routes import alerts, discovery, health, research, screening, watchlist
+from app.routes import alerts, discovery, health, research, screening, ui, watchlist
 
 
 def create_app() -> FastAPI:
@@ -13,8 +13,9 @@ def create_app() -> FastAPI:
         description="Research and alerting assistant for NSE/BSE equities. Research only - no trade execution.",
         version="0.1.0",
     )
-    for module in (health, screening, discovery, research, watchlist, alerts):
+    for module in (health, screening, discovery, research, watchlist, alerts, ui):
         app.include_router(module.router)
+    ui.mount(app)
     return app
 
 
